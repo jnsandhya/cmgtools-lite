@@ -129,6 +129,7 @@ if test:
     cache = True
     if not data:
         comp = bindex.glob('MC_a_dilep')[0]
+			   #MC_c_TTW
     else:
         comp = selectedComponents[0]
     selectedComponents   = [comp]
@@ -437,7 +438,7 @@ bjets_30 = cfg.Analyzer(Selector,
 ############################################################################
 from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer import LHEWeightAnalyzer
 from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer   import PileUpAnalyzer
-from CMGTools.TTbarTime.heppy.analyzers.MCWeighter      import MCWeighter
+from CMGTools.H2TauTau.heppy.analyzers.MCWeighter      import MCWeighter
 from CMGTools.TTbarTime.proto.analyzers.NJetsAnalyzer   import NJetsAnalyzer
 from CMGTools.TTbarTime.heppy.analyzers.METAnalyzer     import METAnalyzer
 #from CMGTools.TTbarTime.heppy.analyzers.GenAnalyzer import GenAnalyzer
@@ -521,7 +522,8 @@ sequence = cfg.Sequence([
     #trigger_match,
     #met_filters,
     lheweight,
-    pileup, 
+    pileup,
+    mcweighter,
     njets_ana,
 #Met
     pfmetana,
