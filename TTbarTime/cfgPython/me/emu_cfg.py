@@ -16,8 +16,8 @@ Event.print_patterns = ['*taus*',
 #import pdb; pdb.set_trace()
 
 from CMGTools.RootTools.samples.ComponentCreator import ComponentCreator
-ComponentCreator.useAAA = True
-#ComponentCreator.useLyonAAA = True
+#ComponentCreator.useAAA = True
+ComponentCreator.useLyonAAA = True
 
 from CMGTools.H2TauTau.heppy.analyzers.Cleaner import Cleaner
 
@@ -128,7 +128,7 @@ bindex = ComponentIndex(backgrounds_forindex)
 if test:
     cache = True
     if not data:
-        comp = bindex.glob('MC_a_dilep')[0]
+        comp = bindex.glob('MC_c_TTW')[0]
 			   #MC_c_TTW
     else:
         comp = selectedComponents[0]
@@ -450,7 +450,7 @@ bjets_30 = cfg.Analyzer(Selector,
 ############################################################################
 from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer import LHEWeightAnalyzer
 from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer   import PileUpAnalyzer
-from CMGTools.H2TauTau.heppy.analyzers.MCWeighter      import MCWeighter
+from CMGTools.TTbarTime.heppy.analyzers.MCWeighter      import MCWeighter
 from CMGTools.TTbarTime.proto.analyzers.NJetsAnalyzer   import NJetsAnalyzer
 from CMGTools.TTbarTime.heppy.analyzers.METAnalyzer     import METAnalyzer
 #from CMGTools.TTbarTime.heppy.analyzers.GenAnalyzer import GenAnalyzer
@@ -493,6 +493,7 @@ ntuple = cfg.Analyzer(NtupleProducer,
                       event_content = event_content_test)
 
 sequence = cfg.Sequence([
+    mcweighter,
 # Analyzers
     json,
     vertex,
@@ -535,7 +536,6 @@ sequence = cfg.Sequence([
     #met_filters,
     lheweight,
     pileup,
-    mcweighter,
     njets_ana,
 #Met
     pfmetana,
