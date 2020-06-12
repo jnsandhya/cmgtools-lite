@@ -65,17 +65,11 @@ class DilepTriggerSFARC(Analyzer):
 
 
 
-        ##setattr(event, 'sfEETrigWeight', sf_ee_trig_weight)
+        setattr(event, 'sfEETrigWeight', sf_ee_trig_weight)
         setattr(event, 'sfEMTrigWeight', sf_em_trig_weight)
-        ##setattr(event, 'sfMMTrigWeight', sf_mm_trig_weight)
+        setattr(event, 'sfMMTrigWeight', sf_mm_trig_weight)
 
         #setattr(event, 'sfmTrigIsoMu27Weight', sf_muon_isomu27_weight)
         #setattr(event, 'sfmTrigMu50Weight', sf_muon_mu50_weight)
         
-        #event.eventWeight *= event.sfEETrigWeight
-        event.eventWeight *= event.sfEMTrigWeight
-        #event.eventWeight *= event.sfMMTrigWeight
-        ##event.eventWeight *= event.sfmTrigIsoMu27Weight
-        ##event.eventWeight *= event.sfmTrigMu50Weight
-  
           

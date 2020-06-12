@@ -21,4 +21,5 @@ class MCWeighter(Analyzer):
             self.readCollections(event.input)
             event.generatorWeight = self.mchandles['GenInfo'].product().weight()
             self.count.inc('Sum Weights', event.generatorWeight)
+
             
