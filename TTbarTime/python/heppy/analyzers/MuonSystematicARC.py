@@ -51,8 +51,8 @@ class MuonSystARC(Analyzer):
         
     def process(self, event):
 
-        syst_id_weight = 1.    
-        syst_iso_weight = 1.
+        syst_id_weight = 0.    
+        syst_iso_weight = 0.
         muons = getattr(event, self.cfg_ana.muons)    
         for muon in muons: # caution abs(eta)
             if(muon.pt() <= 120):

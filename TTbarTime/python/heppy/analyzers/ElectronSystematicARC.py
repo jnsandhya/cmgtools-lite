@@ -98,8 +98,8 @@ class ElectronSystARC(Analyzer):
     
     def process(self, event):
         
-        syst_id_weight = 1.        
-        syst_reco_weight = 1.
+        syst_id_weight = 0.        
+        syst_reco_weight = 0.
         
         electrons = getattr(event, self.cfg_ana.electrons)
         for elec in electrons:
