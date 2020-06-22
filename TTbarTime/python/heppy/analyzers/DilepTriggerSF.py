@@ -4,10 +4,10 @@ from ROOT import TFile, TH2F
 
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 
-class DilepTriggerSFARC(Analyzer):
+class DilepTriggerSF(Analyzer):
 
     def __init__(self, cfg_ana, cfg_comp, looperName):
-        super(DilepTriggerSFARC, self).__init__(cfg_ana, cfg_comp, looperName)
+        super(DilepTriggerSF, self).__init__(cfg_ana, cfg_comp, looperName)
         self.year       = self.cfg_ana.year
         if self.year == 2016 :
             
@@ -69,7 +69,7 @@ class DilepTriggerSFARC(Analyzer):
         setattr(event, 'sfEMTrigWeight', sf_em_trig_weight)
         setattr(event, 'sfMMTrigWeight', sf_mm_trig_weight)
 
-        #setattr(event, 'sfmTrigIsoMu27Weight', sf_muon_isomu27_weight)
-        #setattr(event, 'sfmTrigMu50Weight', sf_muon_mu50_weight)
+        #setattr(event, 'systTrigIsoMu27Weight', sf_muon_isomu27_weight)
+        #setattr(event, 'systTrigMu50Weight', sf_muon_mu50_weight)
         
           
