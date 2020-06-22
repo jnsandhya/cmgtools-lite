@@ -9,7 +9,7 @@ class DilepTriggerSF(Analyzer):
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(DilepTriggerSF, self).__init__(cfg_ana, cfg_comp, looperName)
         self.year       = self.cfg_ana.year
-        if self.year == 2016 :
+        if self.year == '2016':
             
             rootfname_ee = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_ee2016_pt.root'])                       
@@ -18,7 +18,7 @@ class DilepTriggerSF(Analyzer):
             rootfname_mm = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_mumu2016_pt.root'])
             
-        else:
+        elif self.year == '2017':
             rootfname_ee = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/TriggerSF_ee2017_pt.root'])                       
             rootfname_em = '/'.join([os.environ["CMSSW_BASE"],

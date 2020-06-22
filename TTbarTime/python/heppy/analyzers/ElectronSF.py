@@ -5,20 +5,20 @@ from ROOT import TFile, TH2F
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 
 
-class ElectronSFARC(Analyzer):
+class ElectronSF(Analyzer):
 
     def __init__(self, cfg_ana, cfg_comp, looperName):
-        super(ElectronSFARC, self).__init__(cfg_ana, cfg_comp, looperName)
+        super(ElectronSF, self).__init__(cfg_ana, cfg_comp, looperName)
         self.year       = self.cfg_ana.year
 
-        if self.year == 2016 :
+        if self.year == '2016':
             rootfname_id = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/2016/eleSF/2016LegacyReReco_ElectronTight_Fall17V2.root'])
             
             rootfname_reco = '/'.join([os.environ["CMSSW_BASE"],
                                        'src/CMGTools/TTbarTime/data/2016/eleSF/EGM2D_BtoH_GT20GeV_RecoSF_Legacy2016.root'])
                 
-        else:
+        elif self.year == '2017':
             rootfname_id = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/2017_ElectronTight.root'])
             

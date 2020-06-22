@@ -128,7 +128,7 @@ bindex = ComponentIndex(backgrounds_forindex)
 if test:
     cache = True
     if not data:
-        comp = bindex.glob('MC_c_TTW')[0]
+        comp = bindex.glob('MC_a_dilep')[0]
 			   #MC_c_TTW
     else:
         comp = selectedComponents[0]
@@ -251,7 +251,7 @@ systematic_muon = cfg.Analyzer(MuonSystematic,
 # setting up an alias for our isolation, now use iso_htt everywhere
 from PhysicsTools.Heppy.physicsobjects.Electron            import Electron
 from PhysicsTools.Heppy.physicsutils.EffectiveAreas        import areas
-from CMGTools.TTbarTime.heppy.analyzers.ElectronSF         import ElectronSFARC
+from CMGTools.TTbarTime.heppy.analyzers.ElectronSF         import ElectronSF
 from CMGTools.TTbarTime.heppy.analyzers.ElectronAnalyzer   import ElectronAnalyzer
 from CMGTools.TTbarTime.heppy.analyzers.ElectronSystematic import ElectronSystematic
 from CMGTools.TTbarTime.heppy.analyzers.EventFilter        import EventFilter
@@ -300,7 +300,7 @@ exclude_electron = cfg.Analyzer(Selector,
                               src = 'electrons',
                               filter_func = exclude_electron_function)
                          
-reweight_electron = cfg.Analyzer(ElectronSFARC, 
+reweight_electron = cfg.Analyzer(ElectronSF, 
                                  'reweight_electron', 
                                  electrons = 'select_electron', 
                                  year = year)
@@ -537,8 +537,8 @@ sequence = cfg.Sequence([
     dilepton,
     select_dilepton,
     reweight_dilepton_trig,
-    only_one_dilepton,
     systematic_dilepton,
+    only_one_dilepton,
     dilepton_sorted,
 # Jets
     jets,

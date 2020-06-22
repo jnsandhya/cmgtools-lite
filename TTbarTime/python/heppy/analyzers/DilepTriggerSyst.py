@@ -9,7 +9,7 @@ class DilepTriggerSyst(Analyzer):
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(DilepTriggerSyst, self).__init__(cfg_ana, cfg_comp, looperName)
         self.year       = self.cfg_ana.year
-        if self.year == 2016 :
+        if self.year == '2016':
             
             rootfname_ee = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_ee2016_pt.root'])                       
@@ -18,7 +18,7 @@ class DilepTriggerSyst(Analyzer):
             rootfname_mm = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_mumu2016_pt.root'])
             
-        else:
+        elif self.year == '2017':
             rootfname_ee = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/TriggerSF_ee2017_pt.root'])                       
             rootfname_em = '/'.join([os.environ["CMSSW_BASE"],
@@ -43,9 +43,9 @@ class DilepTriggerSyst(Analyzer):
                 
     def process(self, event):
     
-        syst_ee_trig_weight = 0.    
-        syst_em_trig_weight = 0.    
-        syst_mm_trig_weight = 0.    
+        syst_ee_trig_weight = 1.    
+        syst_em_trig_weight = 1.    
+        syst_mm_trig_weight = 1.    
         
         #syst_muon_isomu27_weight = 1.
         #syst_muon_mu50_weight    = 1.
@@ -63,7 +63,12 @@ class DilepTriggerSyst(Analyzer):
                 syst_em_trig_weight *= self.mc_syst_em_trig_hist.GetBinError(self.mc_syst_em_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead()))
                 syst_mm_trig_weight *= self.mc_syst_mm_trig_hist.GetBinError(self.mc_syst_mm_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead()))
 
-
+        if(syst_ee_trig_weight == 1.):
+            syst_ee_trig_weight = 0.
+        if(syst_em_trig_weight == 1.):
+            syst_em_trig_weight = 0.
+        if(syst_mm_trig_weight == 1.):
+            syst_mm_trig_weight = 0.
 
         setattr(event, 'systEETrigWeight', syst_ee_trig_weight)
         setattr(event, 'systEMTrigWeight', syst_em_trig_weight)

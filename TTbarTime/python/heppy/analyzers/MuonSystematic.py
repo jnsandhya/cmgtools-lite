@@ -13,7 +13,7 @@ class MuonSystematic(Analyzer):
         self.lumi_GH    = 16226.452636126
         self.year       = self.cfg_ana.year
 
-        if self.year == 2016 :
+        if self.year == '2016':
             rootfname_id_1 = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/2016/muonSF/RunBCDEF_SF_ID.root'])                       
             rootfname_iso_1 = '/'.join([os.environ["CMSSW_BASE"],
@@ -37,7 +37,7 @@ class MuonSystematic(Analyzer):
             self.mc_syst_iso_file2 = TFile(rootfname_iso_2)
             self.mc_syst_iso_hist2 = self.mc_syst_iso_file2.Get('NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta')                              
         
-        else:
+        elif self.year == '2017':
             rootfname_id_1 = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/RunBCDEF_SF_ID.root'])                       
             rootfname_iso_1 = '/'.join([os.environ["CMSSW_BASE"],
@@ -50,20 +50,20 @@ class MuonSystematic(Analyzer):
         
     def process(self, event):
 
-        syst_id_weight = 0.    
-        syst_iso_weight = 0.
+        syst_id_weight = 1.    
+        syst_iso_weight = 1.
 
-        if self.year == 2016:
-            syst_id_weight1  = 0.    
-            syst_iso_weight1 = 0.
-            syst_id_weight2  = 0.    
-            syst_iso_weight2 = 0.
+        if self.year == '2016':
+            syst_id_weight1  = 1.    
+            syst_iso_weight1 = 1.
+            syst_id_weight2  = 1.    
+            syst_iso_weight2 = 1.
 
         muons = getattr(event, self.cfg_ana.muons)    
 
         for muon in muons:
             if(muon.pt() <= 120):
-                if self.year == 2016:
+                if self.year == '2016':
                     syst_id_weight1  *= self.mc_syst_id_hist1.GetBinContent(self.mc_syst_id_hist1.FindBin(muon.eta(), muon.pt()))
                     syst_iso_weight1 *= self.mc_syst_iso_hist1.GetBinContent(self.mc_syst_iso_hist1.FindBin(muon.eta(), muon.pt()))
                     
@@ -73,10 +73,14 @@ class MuonSystematic(Analyzer):
                     syst_id_weight  *= (syst_id_weight1*self.lumi_BCDEF + syst_id_weight2*self.lumi_GH)/(self.lumi_BCDEF + self.lumi_GH)
                     syst_iso_weight *= (syst_iso_weight1*self.lumi_BCDEF + syst_iso_weight2*self.lumi_GH)/(self.lumi_BCDEF + self.lumi_GH)
       
-                else : 
-                    syst_id_weight  *= self.mc_syst_id_hist1.GetBinContent(self.mc_syst_id_hist1.FindBin(abs(muon.eta()), muon.pt()))
-                    syst_iso_weight *= self.mc_syst_iso_hist1.GetBinContent(self.mc_syst_iso_hist1.FindBin(abs(muon.eta()), muon.pt()))
+                elif self.year == '2017': 
+                    syst_id_weight  *= self.mc_syst_id_hist1.GetBinError(self.mc_syst_id_hist1.FindBin(muon.pt(),abs(muon.eta())))
+                    syst_iso_weight *= self.mc_syst_iso_hist1.GetBinError(self.mc_syst_iso_hist1.FindBin(muon.pt(),abs(muon.eta())))
 
+        if(syst_id_weight == 1.):
+            syst_id_weight = 0.
+        if(syst_iso_weight == 1.):
+            syst_iso_weight = 0.
 
         setattr(event, 'systMuonIdWeight', syst_id_weight)
         setattr(event, 'systMuonIsoWeight', syst_iso_weight)
