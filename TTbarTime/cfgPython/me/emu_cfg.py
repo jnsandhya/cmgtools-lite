@@ -35,10 +35,10 @@ logging.basicConfig(level=logging.WARNING)
 # Get all heppy options; set via "-o production" or "-o production=True"
 
 # production = True run on batch, production = False run locally
-test       = getHeppyOption('test', True)
+test       = getHeppyOption('test', False)
 syncntuple = getHeppyOption('syncntuple', True)
 data       = getHeppyOption('data', False)
-year       = getHeppyOption('year', '2016' )
+year       = getHeppyOption('year', '2017' )
 tes_string = getHeppyOption('tes_string', '') # '_tesup' '_tesdown'
 reapplyJEC = getHeppyOption('reapplyJEC', True)
 
@@ -77,7 +77,7 @@ if year == '2016':
     
 if year == '2017':
     puFileData = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/pudistributions_data_2017.root'
-    puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pileup.root'
+    puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pileup_down.root'
 
 #else:
 for sample in mc_ttbar:
@@ -128,7 +128,7 @@ bindex = ComponentIndex(backgrounds_forindex)
 if test:
     cache = True
     if not data:
-        comp = bindex.glob('MC_c_TTW')[0]
+        comp = bindex.glob('MC_a_dilep')[0]
 			   #MC_c_TTW
     else:
         comp = selectedComponents[0]
@@ -182,11 +182,12 @@ time = cfg.Analyzer(TimeAnalyzerARC,
 # Muon 
 ############################################################################
 # setting up an alias for our isolation, now use iso_htt everywhere
-from PhysicsTools.Heppy.physicsobjects.Muon          import Muon
-from CMGTools.TTbarTime.heppy.analyzers.MuonSFARC    import MuonSFARC   
-from CMGTools.TTbarTime.heppy.analyzers.MuonAnalyzer import MuonAnalyzer
-from CMGTools.TTbarTime.heppy.analyzers.EventFilter  import EventFilter
-from CMGTools.TTbarTime.heppy.analyzers.Selector     import Selector
+from PhysicsTools.Heppy.physicsobjects.Muon            import Muon
+from CMGTools.TTbarTime.heppy.analyzers.MuonSFARC      import MuonSFARC   
+from CMGTools.TTbarTime.heppy.analyzers.MuonSystematic import MuonSystematic
+from CMGTools.TTbarTime.heppy.analyzers.MuonAnalyzer   import MuonAnalyzer
+from CMGTools.TTbarTime.heppy.analyzers.EventFilter    import EventFilter
+from CMGTools.TTbarTime.heppy.analyzers.Selector       import Selector
 
 Muon.iso_htt = lambda x: x.relIso(0.4, 
                                   'dbeta', 
@@ -238,17 +239,23 @@ exclude_loose_muon = cfg.Analyzer(EventFilter,
                                  'exlude_loose_muon',
                                  src='exclude_muon',
                                  filter_func = lambda x : len(x)==0)
-                        
+
+systematic_muon = cfg.Analyzer(MuonSystematic, 
+                             'systematic_muon', 
+                             muons = 'select_muon', 
+                             year = year)
+
 ############################################################################
 # Electron 
 ############################################################################
 # setting up an alias for our isolation, now use iso_htt everywhere
-from PhysicsTools.Heppy.physicsobjects.Electron          import Electron
-from PhysicsTools.Heppy.physicsutils.EffectiveAreas      import areas
-from CMGTools.TTbarTime.heppy.analyzers.ElectronSF       import ElectronSFARC
-from CMGTools.TTbarTime.heppy.analyzers.ElectronAnalyzer import ElectronAnalyzer
-from CMGTools.TTbarTime.heppy.analyzers.EventFilter      import EventFilter
-from CMGTools.TTbarTime.heppy.analyzers.Selector         import Selector
+from PhysicsTools.Heppy.physicsobjects.Electron            import Electron
+from PhysicsTools.Heppy.physicsutils.EffectiveAreas        import areas
+from CMGTools.TTbarTime.heppy.analyzers.ElectronSF         import ElectronSF
+from CMGTools.TTbarTime.heppy.analyzers.ElectronAnalyzer   import ElectronAnalyzer
+from CMGTools.TTbarTime.heppy.analyzers.ElectronSystematic import ElectronSystematic
+from CMGTools.TTbarTime.heppy.analyzers.EventFilter        import EventFilter
+from CMGTools.TTbarTime.heppy.analyzers.Selector           import Selector
 
 Electron.EffectiveArea03 = areas['Fall17']['electron']
 
@@ -293,7 +300,7 @@ exclude_electron = cfg.Analyzer(Selector,
                               src = 'electrons',
                               filter_func = exclude_electron_function)
                          
-reweight_electron = cfg.Analyzer(ElectronSFARC, 
+reweight_electron = cfg.Analyzer(ElectronSF, 
                                  'reweight_electron', 
                                  electrons = 'select_electron', 
                                  year = year)
@@ -307,12 +314,18 @@ exclude_loose_electron = cfg.Analyzer(EventFilter,
                                      'exclude_loose_electron',
                                      src='exclude_electron',
                                      filter_func = lambda x : len(x)==0)
- 
+
+systematic_electron = cfg.Analyzer(ElectronSystematic, 
+                                    'systematic_electron', 
+                                    electrons = 'select_electron', 
+                                    year = year)
+
 ############################################################################
 # Dilepton 
 ############################################################################
 from CMGTools.TTbarTime.heppy.analyzers.DiLeptonAnalyzer  import DiLeptonAnalyzer
-from CMGTools.TTbarTime.heppy.analyzers.DilepTriggerSF    import DilepTriggerSFARC
+from CMGTools.TTbarTime.heppy.analyzers.DilepTriggerSF    import DilepTriggerSF
+from CMGTools.TTbarTime.heppy.analyzers.DilepTriggerSyst  import DilepTriggerSyst
 from CMGTools.TTbarTime.heppy.analyzers.Selector          import Selector
 from CMGTools.TTbarTime.heppy.analyzers.EventFilter       import EventFilter
 
@@ -336,7 +349,7 @@ select_dilepton = cfg.Analyzer(Selector,
                          src = 'dileptons',
                          filter_func = select_dilepton_function)
 
-reweight_dilepton_trig = cfg.Analyzer(DilepTriggerSFARC, 
+reweight_dilepton_trig = cfg.Analyzer(DilepTriggerSF, 
                                       'reweight_dilepton', 
                                       dilepton = 'select_dilepton', 
                                       year =year)
@@ -345,6 +358,11 @@ only_one_dilepton = cfg.Analyzer(EventFilter,
                             name = 'OneDilepton',
                             src = 'select_dilepton',
                             filter_func = lambda x : len(x)==1)
+
+systematic_dilepton = cfg.Analyzer(DilepTriggerSyst, 
+                                      'systematic_dilepton', 
+                                      dilepton = 'select_dilepton', 
+                                      year =year)
 
 from CMGTools.H2TauTau.heppy.analyzers.Sorter import Sorter
 #completely useless with 1 dilepton but in case of ..
@@ -506,6 +524,7 @@ sequence = cfg.Sequence([
     reweight_muon,
     one_muon,
     exclude_loose_muon,
+    systematic_muon,
 # Electron
     electrons,
     select_electron,
@@ -513,10 +532,12 @@ sequence = cfg.Sequence([
     reweight_electron,
     one_electron,
     exclude_loose_electron,
+    systematic_electron,
 # Dilepton
     dilepton,
     select_dilepton,
     reweight_dilepton_trig,
+    systematic_dilepton,
     only_one_dilepton,
     dilepton_sorted,
 # Jets
