@@ -16,8 +16,8 @@ Event.print_patterns = ['*taus*',
 #import pdb; pdb.set_trace()
 
 from CMGTools.RootTools.samples.ComponentCreator import ComponentCreator
-#ComponentCreator.useAAA = True
-ComponentCreator.useLyonAAA = True
+ComponentCreator.useAAA = True
+#ComponentCreator.useLyonAAA = True
 
 from CMGTools.H2TauTau.heppy.analyzers.Cleaner import Cleaner
 
@@ -77,7 +77,7 @@ if year == '2016':
     
 if year == '2017':
     puFileData = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/pudistributions_data_2017.root'
-    puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pileup_down.root'
+    puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pileup.root'
 
 #else:
 for sample in mc_ttbar:
