@@ -16,8 +16,8 @@ Event.print_patterns = ['*taus*',
 #import pdb; pdb.set_trace()
 
 from CMGTools.RootTools.samples.ComponentCreator import ComponentCreator
-ComponentCreator.useAAA = True
-#ComponentCreator.useLyonAAA = True
+#ComponentCreator.useAAA = True
+ComponentCreator.useLyonAAA = True
 
 from CMGTools.H2TauTau.heppy.analyzers.Cleaner import Cleaner
 
@@ -128,7 +128,8 @@ bindex = ComponentIndex(backgrounds_forindex)
 if test:
     cache = True
     if not data:
-        comp = bindex.glob('MC_a_dilep')[0]
+        comp = bindex.glob('MC_c_TTW')[0]
+			   #MC_c_TTW
     else:
         comp = selectedComponents[0]
     selectedComponents   = [comp]
@@ -492,6 +493,7 @@ ntuple = cfg.Analyzer(NtupleProducer,
                       event_content = event_content_test)
 
 sequence = cfg.Sequence([
+    mcweighter,
 # Analyzers
     json,
     vertex,
@@ -533,7 +535,7 @@ sequence = cfg.Sequence([
     #trigger_match,
     #met_filters,
     lheweight,
-    pileup, 
+    pileup,
     njets_ana,
 #Met
     pfmetana,

@@ -4,12 +4,12 @@ from ROOT import TFile, TH2F
 
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 
-class DilepTriggerSFARC(Analyzer):
+class DilepTriggerSF(Analyzer):
 
     def __init__(self, cfg_ana, cfg_comp, looperName):
-        super(DilepTriggerSFARC, self).__init__(cfg_ana, cfg_comp, looperName)
+        super(DilepTriggerSF, self).__init__(cfg_ana, cfg_comp, looperName)
         self.year       = self.cfg_ana.year
-        if self.year == 2016 :
+        if self.year == '2016':
             
             rootfname_ee = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_ee2016_pt.root'])                       
@@ -18,7 +18,7 @@ class DilepTriggerSFARC(Analyzer):
             rootfname_mm = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_mumu2016_pt.root'])
             
-        else:
+        elif self.year == '2017':
             rootfname_ee = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/TriggerSF_ee2017_pt.root'])                       
             rootfname_em = '/'.join([os.environ["CMSSW_BASE"],
@@ -65,17 +65,11 @@ class DilepTriggerSFARC(Analyzer):
 
 
 
-        ##setattr(event, 'sfEETrigWeight', sf_ee_trig_weight)
+        setattr(event, 'sfEETrigWeight', sf_ee_trig_weight)
         setattr(event, 'sfEMTrigWeight', sf_em_trig_weight)
-        ##setattr(event, 'sfMMTrigWeight', sf_mm_trig_weight)
+        setattr(event, 'sfMMTrigWeight', sf_mm_trig_weight)
 
-        #setattr(event, 'sfmTrigIsoMu27Weight', sf_muon_isomu27_weight)
-        #setattr(event, 'sfmTrigMu50Weight', sf_muon_mu50_weight)
+        #setattr(event, 'systTrigIsoMu27Weight', sf_muon_isomu27_weight)
+        #setattr(event, 'systTrigMu50Weight', sf_muon_mu50_weight)
         
-        #event.eventWeight *= event.sfEETrigWeight
-        event.eventWeight *= event.sfEMTrigWeight
-        #event.eventWeight *= event.sfMMTrigWeight
-        ##event.eventWeight *= event.sfmTrigIsoMu27Weight
-        ##event.eventWeight *= event.sfmTrigMu50Weight
-  
           

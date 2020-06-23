@@ -55,23 +55,21 @@ weights = Block(
     weight_sfe_reco = v(lambda x : getattr(x, 'sfeRecoWeight', 1.)),
     weight_sfm_id = v(lambda x : getattr(x, 'sfmIdWeight', 1.)),
     weight_sfm_iso = v(lambda x : getattr(x, 'sfmIsoWeight', 1.)),
-    weight_sfm_trig_isomu27 = v(lambda x : getattr(x, 'sfmTrigIsoMu27Weight', 1.)),
-    weight_sfm_trig_mu50 = v(lambda x : getattr(x, 'sfmTrigMu50Weight', 1.)),
 #    weight_sf_ee_trig = v(lambda x : getattr(x, 'sfEETrigWeight', 1.)),
     weight_sf_em_trig = v(lambda x : getattr(x, 'sfEMTrigWeight', 1.)),
-#    weight_sf_mm_trig = v(lambda x : getattr(x, 'sfMMTrigWeight', 1.)),
+#    weight_sf_mm_trig = v(lambda x : getattr(x, 'sfMTrigWeight', 1.)),
 ) 
 
 syst = Block(
     'systematics', lambda x: x,
-    weight_syst = v(lambda x : x.eventSystWeight),
+#    weight_syst = v(lambda x : x.eventSystWeight),
     syst_muon_id = v(lambda x : getattr(x, 'systMuonIdWeight', 1.)),
     syst_muon_iso = v(lambda x : getattr(x, 'systMuonIsoWeight',1.)),
-    syst_muon_trig_isomu27 = v(lambda x : getattr(x, 'systTrigIsoMu27Weight',1.)),
-    syst_muon_trig_mu50 = v(lambda x : getattr(x, 'systTrigMu50Weight',1.)),
-    syst_em_trig = v(lambda x : getattr(x, 'systEMTrigWeight',1.)),
     syst_elec_id = v(lambda x : getattr(x, 'systElecIdWeight',1.)),
     syst_elec_reco = v(lambda x : getattr(x, 'systElecRecoWeight',1.)),
+#    syst_ee_trig = v(lambda x : getattr(x, 'systEETrigWeight', 1.)),
+    syst_em_trig = v(lambda x : getattr(x, 'systEMTrigWeight', 1.)),
+#    syst_mm_trig = v(lambda x : getattr(x, 'systMTrigWeight', 1.)),
 )  
 
 triggers_fired = Block(

@@ -13,7 +13,7 @@ class MuonSFARC(Analyzer):
         self.lumi_GH    = 16226.452636126
         self.year       = self.cfg_ana.year
 
-        if self.year == 2016 :
+        if self.year == '2016':
             rootfname_id_1 = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/2016/muonSF/RunBCDEF_SF_ID.root'])                       
             rootfname_iso_1 = '/'.join([os.environ["CMSSW_BASE"],
@@ -37,7 +37,7 @@ class MuonSFARC(Analyzer):
             self.mc_sfm_iso_file2 = TFile(rootfname_iso_2)
             self.mc_sfm_iso_hist2 = self.mc_sfm_iso_file2.Get('NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta')                              
         
-        else:
+        elif self.year == '2017':
             rootfname_id_1 = '/'.join([os.environ["CMSSW_BASE"],
                                      'src/CMGTools/TTbarTime/data/RunBCDEF_SF_ID.root'])                       
             rootfname_iso_1 = '/'.join([os.environ["CMSSW_BASE"],
@@ -74,8 +74,8 @@ class MuonSFARC(Analyzer):
                     sfm_iso_weight *= (sfm_iso_weight1*self.lumi_BCDEF + sfm_iso_weight2*self.lumi_GH)/(self.lumi_BCDEF + self.lumi_GH)
       
                 else : 
-                    sfm_id_weight  *= self.mc_sfm_id_hist1.GetBinContent(self.mc_sfm_id_hist1.FindBin(abs(muon.eta()), muon.pt()))
-                    sfm_iso_weight *= self.mc_sfm_iso_hist1.GetBinContent(self.mc_sfm_iso_hist1.FindBin(abs(muon.eta()), muon.pt()))
+                    sfm_id_weight  *= self.mc_sfm_id_hist1.GetBinContent(self.mc_sfm_id_hist1.FindBin(muon.pt(),abs(muon.eta())))
+                    sfm_iso_weight *= self.mc_sfm_iso_hist1.GetBinContent(self.mc_sfm_iso_hist1.FindBin(muon.pt(),abs(muon.eta())))
 
 
         setattr(event, 'sfmIdWeight', sfm_id_weight)
