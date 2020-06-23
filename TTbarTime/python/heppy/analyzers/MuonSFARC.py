@@ -26,16 +26,17 @@ class MuonSFARC(Analyzer):
 
                               
             self.mc_sfm_id_file1 = TFile(rootfname_id_1)
-            self.mc_sfm_id_hist1 = self.mc_sfm_id_file1.Get('NUM_TightID_DEN_genTracks_pt_abseta')                              
+            self.mc_sfm_id_hist1 = self.mc_sfm_id_file1.Get('NUM_TightID_DEN_genTracks_eta_pt')
+
                 
             self.mc_sfm_iso_file1 = TFile(rootfname_iso_1)
-            self.mc_sfm_iso_hist1 = self.mc_sfm_iso_file1.Get('NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta')                              
+            self.mc_sfm_iso_hist1 = self.mc_sfm_iso_file1.Get('NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt')                              
 
             self.mc_sfm_id_file2 = TFile(rootfname_id_2)
-            self.mc_sfm_id_hist2 = self.mc_sfm_id_file2.Get('NUM_TightID_DEN_genTracks_pt_abseta')                              
+            self.mc_sfm_id_hist2 = self.mc_sfm_id_file2.Get('NUM_TightID_DEN_genTracks_eta_pt')                              
                 
             self.mc_sfm_iso_file2 = TFile(rootfname_iso_2)
-            self.mc_sfm_iso_hist2 = self.mc_sfm_iso_file2.Get('NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta')                              
+            self.mc_sfm_iso_hist2 = self.mc_sfm_iso_file2.Get('NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt')                              
         
         elif self.year == '2017':
             rootfname_id_1 = '/'.join([os.environ["CMSSW_BASE"],
@@ -44,7 +45,7 @@ class MuonSFARC(Analyzer):
                               'src/CMGTools/TTbarTime/data/RunBCDEF_SF_ISO.root'])
             self.mc_sfm_id_file1 = TFile(rootfname_id_1)
             self.mc_sfm_id_hist1 = self.mc_sfm_id_file1.Get('NUM_TightID_DEN_genTracks_pt_abseta')                              
-            
+
             self.mc_sfm_iso_file1 = TFile(rootfname_iso_1)
             self.mc_sfm_iso_hist1 = self.mc_sfm_iso_file1.Get('NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta')                              
         
@@ -53,7 +54,7 @@ class MuonSFARC(Analyzer):
         sfm_id_weight = 1.    
         sfm_iso_weight = 1.
 
-        if self.year == 2016:
+        if self.year == '2016':
             sfm_id_weight1  = 1.    
             sfm_iso_weight1 = 1.
             sfm_id_weight2  = 1.    
@@ -63,7 +64,7 @@ class MuonSFARC(Analyzer):
 
         for muon in muons:
             if(muon.pt() <= 120):
-                if self.year == 2016:
+                if self.year == '2016':
                     sfm_id_weight1  *= self.mc_sfm_id_hist1.GetBinContent(self.mc_sfm_id_hist1.FindBin(muon.eta(), muon.pt()))
                     sfm_iso_weight1 *= self.mc_sfm_iso_hist1.GetBinContent(self.mc_sfm_iso_hist1.FindBin(muon.eta(), muon.pt()))
                     
