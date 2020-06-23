@@ -26,16 +26,17 @@ class MuonSFARC(Analyzer):
 
                               
             self.mc_sfm_id_file1 = TFile(rootfname_id_1)
-            self.mc_sfm_id_hist1 = self.mc_sfm_id_file1.Get('NUM_TightID_DEN_genTracks_pt_abseta')                              
+            self.mc_sfm_id_hist1 = self.mc_sfm_id_file1.Get('NUM_TightID_DEN_genTracks_eta_pt')
+
                 
             self.mc_sfm_iso_file1 = TFile(rootfname_iso_1)
-            self.mc_sfm_iso_hist1 = self.mc_sfm_iso_file1.Get('NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta')                              
+            self.mc_sfm_iso_hist1 = self.mc_sfm_iso_file1.Get('NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt')                              
 
             self.mc_sfm_id_file2 = TFile(rootfname_id_2)
-            self.mc_sfm_id_hist2 = self.mc_sfm_id_file2.Get('NUM_TightID_DEN_genTracks_pt_abseta')                              
+            self.mc_sfm_id_hist2 = self.mc_sfm_id_file2.Get('NUM_TightID_DEN_genTracks_eta_pt')                              
                 
             self.mc_sfm_iso_file2 = TFile(rootfname_iso_2)
-            self.mc_sfm_iso_hist2 = self.mc_sfm_iso_file2.Get('NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta')                              
+            self.mc_sfm_iso_hist2 = self.mc_sfm_iso_file2.Get('NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt')                              
         
         elif self.year == '2017':
             rootfname_id_1 = '/'.join([os.environ["CMSSW_BASE"],
@@ -44,7 +45,7 @@ class MuonSFARC(Analyzer):
                               'src/CMGTools/TTbarTime/data/RunBCDEF_SF_ISO.root'])
             self.mc_sfm_id_file1 = TFile(rootfname_id_1)
             self.mc_sfm_id_hist1 = self.mc_sfm_id_file1.Get('NUM_TightID_DEN_genTracks_pt_abseta')                              
-            
+
             self.mc_sfm_iso_file1 = TFile(rootfname_iso_1)
             self.mc_sfm_iso_hist1 = self.mc_sfm_iso_file1.Get('NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta')                              
         
