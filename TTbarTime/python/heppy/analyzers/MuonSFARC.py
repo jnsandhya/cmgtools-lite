@@ -53,7 +53,7 @@ class MuonSFARC(Analyzer):
         sfm_id_weight = 1.    
         sfm_iso_weight = 1.
 
-        if self.year == 2016:
+        if self.year == '2016':
             sfm_id_weight1  = 1.    
             sfm_iso_weight1 = 1.
             sfm_id_weight2  = 1.    
@@ -63,7 +63,7 @@ class MuonSFARC(Analyzer):
 
         for muon in muons:
             if(muon.pt() <= 120):
-                if self.year == 2016:
+                if self.year == '2016':
                     sfm_id_weight1  *= self.mc_sfm_id_hist1.GetBinContent(self.mc_sfm_id_hist1.FindBin(muon.eta(), muon.pt()))
                     sfm_iso_weight1 *= self.mc_sfm_iso_hist1.GetBinContent(self.mc_sfm_iso_hist1.FindBin(muon.eta(), muon.pt()))
                     
@@ -73,7 +73,7 @@ class MuonSFARC(Analyzer):
                     sfm_id_weight  *= (sfm_id_weight1*self.lumi_BCDEF + sfm_id_weight2*self.lumi_GH)/(self.lumi_BCDEF + self.lumi_GH)
                     sfm_iso_weight *= (sfm_iso_weight1*self.lumi_BCDEF + sfm_iso_weight2*self.lumi_GH)/(self.lumi_BCDEF + self.lumi_GH)
       
-                else : 
+                elif self.year == '2017':
                     sfm_id_weight  *= self.mc_sfm_id_hist1.GetBinContent(self.mc_sfm_id_hist1.FindBin(muon.pt(),abs(muon.eta())))
                     sfm_iso_weight *= self.mc_sfm_iso_hist1.GetBinContent(self.mc_sfm_iso_hist1.FindBin(muon.pt(),abs(muon.eta())))
 
