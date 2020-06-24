@@ -69,19 +69,18 @@ class MuonSystematic(Analyzer):
                     syst_iso_weight1 += self.mc_syst_iso_hist1.GetBinError(self.mc_syst_iso_hist1.FindBin(muon.eta(), muon.pt()))**2/self.mc_syst_iso_hist1.GetBinContent(self.mc_syst_iso_hist1.FindBin(muon.eta(), muon.pt()))**2 
                     
                     syst_id_weight2  += self.mc_syst_id_hist2.GetBinError(self.mc_syst_id_hist2.FindBin(muon.eta(), muon.pt()))**2/self.mc_syst_id_hist2.GetBinContent(self.mc_syst_id_hist2.FindBin(muon.eta(), muon.pt()))**2
-                    syst_iso_weight2 += self.mc_syst_iso_hist2.GetBinError(self.mc_syst_iso_hist2.FindBin(muon.eta(), muon.pt()))/self.mc_sys\
-t_iso_hist2.GetBinContent(self.mc_syst_iso_hist2.FindBin(muon.eta(), muon.pt()))**2
+                    syst_iso_weight2 += self.mc_syst_iso_hist2.GetBinError(self.mc_syst_iso_hist2.FindBin(muon.eta(), muon.pt()))/self.mc_syst_iso_hist2.GetBinContent(self.mc_syst_iso_hist2.FindBin(muon.eta(), muon.pt()))**2
 
                     syst_id_weight  += (syst_id_weight1*(self.lumi_BCDEF**2) + syst_id_weight2*(self.lumi_GH**2))/((self.lumi_BCDEF + self.lumi_GH)**2)
                     syst_iso_weight += (syst_iso_weight1*(self.lumi_BCDEF**2) + syst_iso_weight2*(self.lumi_GH**2))/((self.lumi_BCDEF + self.lumi_GH**2))
       
                 elif self.year == '2017': 
                     syst_id_weight  += (self.mc_syst_id_hist1.GetBinError(self.mc_syst_id_hist1.FindBin(muon.pt(),abs(muon.eta())))/self.mc_syst_id_hist1.GetBinContent(self.mc_syst_id_hist1.FindBin(muon.pt(),abs(muon.eta()))))**2 
-                    syst_iso_weight *= (self.mc_syst_iso_hist1.GetBinError(self.mc_syst_iso_hist1.FindBin(muon.pt(),abs(muon.eta())))/self.mc_syst_iso_hist1.GetBinContent(self.mc_syst_iso_hist1.FindBin(muon.pt(),abs(muon.eta()))))**2
+                    syst_iso_weight += (self.mc_syst_iso_hist1.GetBinError(self.mc_syst_iso_hist1.FindBin(muon.pt(),abs(muon.eta())))/self.mc_syst_iso_hist1.GetBinContent(self.mc_syst_iso_hist1.FindBin(muon.pt(),abs(muon.eta()))))**2
 
         
-        syst_id_weight = sqrt(syst_id_weight)
-        syst_iso_weight = sqrt(syst_iso_weight)
+        syst_id_weight  = syst_id_weight**0.5
+        syst_iso_weight = syst_iso_weight**0.5
 
     
         setattr(event, 'systMuonIdWeight', syst_id_weight)

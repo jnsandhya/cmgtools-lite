@@ -69,7 +69,5 @@ class DilepTriggerSF(Analyzer):
         setattr(event, 'sfEMTrigWeight', sf_em_trig_weight)
         setattr(event, 'sfMMTrigWeight', sf_mm_trig_weight)
 
-        #setattr(event, 'systTrigIsoMu27Weight', sf_muon_isomu27_weight)
-        #setattr(event, 'systTrigMu50Weight', sf_muon_mu50_weight)
-        
+
           

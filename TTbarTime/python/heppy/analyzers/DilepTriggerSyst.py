@@ -45,9 +45,9 @@ class DilepTriggerSyst(Analyzer):
 
         for dilep in dilepton:
             if(dilep.pt_lead() <= 200 and dilep.pt_sublead() <= 200): 
-                syst_ee_trig_weight += ((self.mc_syst_ee_trig_hist.GetBinError(self.mc_syst_ee_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead())))**2)/((self.mc_syst_ee_trig_hist.GetBinContent(self.mc_syst_ee_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead())))**2)
-                syst_em_trig_weight += ((self.mc_syst_em_trig_hist.GetBinError(self.mc_syst_em_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead())))**2)/((self.mc_syst_em_trig_hist.GetBinContent(self.mc_syst_em_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead())))**2)
-                syst_mm_trig_weight += ((self.mc_syst_mm_trig_hist.GetBinError(self.mc_syst_mm_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead())))**2)/((self.mc_syst_mm_trig_hist.GetBinContent(self.mc_syst_mm_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead())))**2)
+                syst_ee_trig_weight += (self.mc_syst_ee_trig_hist.GetBinError(self.mc_syst_ee_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead()))/self.mc_syst_ee_trig_hist.GetBinContent(self.mc_syst_ee_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead())))**2
+                syst_em_trig_weight += (self.mc_syst_em_trig_hist.GetBinError(self.mc_syst_em_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead()))/self.mc_syst_em_trig_hist.GetBinContent(self.mc_syst_em_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead())))**2
+                syst_mm_trig_weight += (self.mc_syst_mm_trig_hist.GetBinError(self.mc_syst_mm_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead()))/self.mc_syst_mm_trig_hist.GetBinContent(self.mc_syst_mm_trig_hist.FindBin(dilep.pt_lead(), dilep.pt_sublead())))**2
 
         syst_ee_trig_weight = syst_ee_trig_weight**0.5
         syst_em_trig_weight = syst_em_trig_weight**0.5

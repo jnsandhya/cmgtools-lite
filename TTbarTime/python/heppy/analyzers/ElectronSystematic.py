@@ -42,9 +42,9 @@ class ElectronSystematic(Analyzer):
         electrons = getattr(event, self.cfg_ana.electrons)    
         for elec in electrons:
             if(elec.pt()>10 and elec.pt()<500 and abs(elec.superCluster().eta()) <= 2.5):
-                syst_id_weight += ((self.mc_syst_id_hist.GetBinError(self.mc_syst_id_hist.FindBin(elec.superCluster().eta(),elec.pt())))**2)/ ((self.mc_syst_id_hist.GetBinContent(self.mc_syst_id_hist.FindBin(elec.superCluster().eta(),elec.pt())))**2)
+                syst_id_weight += (self.mc_syst_id_hist.GetBinError(self.mc_syst_id_hist.FindBin(elec.superCluster().eta(),elec.pt()))/self.mc_syst_id_hist.GetBinContent(self.mc_syst_id_hist.FindBin(elec.superCluster().eta(),elec.pt())))**2
                 if(elec.pt()>20):
-                    syst_reco_weight += ((self.mc_syst_reco_hist.GetBinError(self.mc_syst_reco_hist.FindBin(elec.superCluster().eta(),elec.pt())))**2)/((self.mc_syst_reco_hist.GetBinContent(self.mc_syst_reco_hist.FindBin(elec.superCluster().eta(),elec.pt())))**2)
+                    syst_reco_weight += (self.mc_syst_reco_hist.GetBinError(self.mc_syst_reco_hist.FindBin(elec.superCluster().eta(),elec.pt()))/self.mc_syst_reco_hist.GetBinContent(self.mc_syst_reco_hist.FindBin(elec.superCluster().eta(),elec.pt())))**2
 
 
         syst_id_weight = syst_id_weight**0.5
@@ -52,7 +52,6 @@ class ElectronSystematic(Analyzer):
 
         setattr(event, 'systElecIdWeight', syst_id_weight)
         setattr(event, 'systElecRecoWeight', syst_reco_weight)
-        event.eventSystWeight *= event.systElecIdWeight
-        event.eventSystWeight *= event.systElecRecoWeight
+
         
         
