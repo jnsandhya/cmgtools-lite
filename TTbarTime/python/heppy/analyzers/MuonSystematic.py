@@ -59,20 +59,24 @@ class MuonSystematic(Analyzer):
             syst_iso_weight1 = 0.
             syst_id_weight2  = 0.    
             syst_iso_weight2 = 0.
+            common_factor = 1. 
 
         muons = getattr(event, self.cfg_ana.muons)    
 
         for muon in muons:
             if(muon.pt() <= 120):
                 if self.year == '2016':
-                    syst_id_weight1  += self.mc_syst_id_hist1.GetBinError(self.mc_syst_id_hist1.FindBin(muon.eta(), muon.pt()))**2 /self.mc_syst_id_hist1.GetBinContent(self.mc_syst_id_hist1.FindBin(muon.eta(), muon.pt()))**2
-                    syst_iso_weight1 += self.mc_syst_iso_hist1.GetBinError(self.mc_syst_iso_hist1.FindBin(muon.eta(), muon.pt()))**2/self.mc_syst_iso_hist1.GetBinContent(self.mc_syst_iso_hist1.FindBin(muon.eta(), muon.pt()))**2 
-                    
-                    syst_id_weight2  += self.mc_syst_id_hist2.GetBinError(self.mc_syst_id_hist2.FindBin(muon.eta(), muon.pt()))**2/self.mc_syst_id_hist2.GetBinContent(self.mc_syst_id_hist2.FindBin(muon.eta(), muon.pt()))**2
-                    syst_iso_weight2 += self.mc_syst_iso_hist2.GetBinError(self.mc_syst_iso_hist2.FindBin(muon.eta(), muon.pt()))/self.mc_syst_iso_hist2.GetBinContent(self.mc_syst_iso_hist2.FindBin(muon.eta(), muon.pt()))**2
+                    common_factor    = self.mc_syst_id_hist1.GetBinContent(self.mc_syst_id_hist1.FindBin(muon.eta(), muon.pt()))*self.lumi_BCDEF + self.mc_syst_id_hist2.GetBinContent(self.mc_syst_id_hist2.FindBin(muon.eta(), muon.pt()))*self.lumi_GH
+                    syst_id_weight1  = self.mc_syst_id_hist1.GetBinError(self.mc_syst_id_hist1.FindBin(muon.eta(), muon.pt()))*self.lumi_BCDEF/common_factor
+                    syst_id_weight2  = self.mc_syst_id_hist2.GetBinError(self.mc_syst_id_hist2.FindBin(muon.eta(), muon.pt()))*self.lumi_GH/common_factor
 
-                    syst_id_weight  += (syst_id_weight1*(self.lumi_BCDEF**2) + syst_id_weight2*(self.lumi_GH**2))/((self.lumi_BCDEF + self.lumi_GH)**2)
-                    syst_iso_weight += (syst_iso_weight1*(self.lumi_BCDEF**2) + syst_iso_weight2*(self.lumi_GH**2))/((self.lumi_BCDEF + self.lumi_GH**2))
+                    syst_id_weight  += syst_id_weight1**2 + syst_id_weight2**2
+
+                    syst_iso_weight1 = self.mc_syst_iso_hist1.GetBinError(self.mc_syst_iso_hist1.FindBin(muon.eta(), muon.pt()))*self.lumi_BCDEF/common_factor
+                    syst_iso_weight2 = self.mc_syst_iso_hist2.GetBinError(self.mc_syst_iso_hist2.FindBin(muon.eta(), muon.pt()))*self.lumi_GH/common_factor
+
+
+                    syst_iso_weight += syst_iso_weight1**2 + syst_iso_weight2**2
       
                 elif self.year == '2017': 
                     syst_id_weight  += (self.mc_syst_id_hist1.GetBinError(self.mc_syst_id_hist1.FindBin(muon.pt(),abs(muon.eta())))/self.mc_syst_id_hist1.GetBinContent(self.mc_syst_id_hist1.FindBin(muon.pt(),abs(muon.eta()))))**2 
