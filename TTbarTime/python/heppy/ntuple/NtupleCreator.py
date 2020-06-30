@@ -50,6 +50,8 @@ weights = Block(
     weight = v(lambda x : x.eventWeight),
     weight_pu = v(lambda x : getattr(x, 'puWeight', 1.)),
     weight_generator = v(lambda x : getattr(x, 'generatorWeight', 1.)),
+    weight_pu_up = v(lambda x : getattr(x, 'puWeightUp',1.)),
+    weight_pu_down = v(lambda x : getattr(x, 'puWeightDown',1.)),
     weight_sfb = v(lambda x : getattr(x, 'sfbWeight', 1.)),
     weight_sfe_id = v(lambda x : getattr(x, 'sfeIdWeight', 1.)),
     weight_sfe_reco = v(lambda x : getattr(x, 'sfeRecoWeight', 1.)),
@@ -63,13 +65,14 @@ weights = Block(
 syst = Block(
     'systematics', lambda x: x,
 #    weight_syst = v(lambda x : x.eventSystWeight),
-    syst_muon_id = v(lambda x : getattr(x, 'systMuonIdWeight', 1.)),
-    syst_muon_iso = v(lambda x : getattr(x, 'systMuonIsoWeight',1.)),
-    syst_elec_id = v(lambda x : getattr(x, 'systElecIdWeight',1.)),
-    syst_elec_reco = v(lambda x : getattr(x, 'systElecRecoWeight',1.)),
-#    syst_ee_trig = v(lambda x : getattr(x, 'systEETrigWeight', 1.)),
-    syst_em_trig = v(lambda x : getattr(x, 'systEMTrigWeight', 1.)),
-#    syst_mm_trig = v(lambda x : getattr(x, 'systMTrigWeight', 1.)),
+    syst_muon_id = v(lambda x : getattr(x, 'systMuonIdWeight', 0.)),
+    syst_muon_iso = v(lambda x : getattr(x, 'systMuonIsoWeight',0.)),
+    syst_elec_id = v(lambda x : getattr(x, 'systElecIdWeight',0.)),
+    syst_elec_reco = v(lambda x : getattr(x, 'systElecRecoWeight',0.)),
+
+#    syst_ee_trig = v(lambda x : getattr(x, 'systEETrigWeight', 0.)),
+    syst_em_trig = v(lambda x : getattr(x, 'systEMTrigWeight', 0.)),
+#    syst_mm_trig = v(lambda x : getattr(x, 'systMTrigWeight', 0.)),
 )  
 
 triggers_fired = Block(
