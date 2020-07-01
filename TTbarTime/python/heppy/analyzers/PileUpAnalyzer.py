@@ -42,6 +42,12 @@ class PileUpAnalyzer( Analyzer ):
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(PileUpAnalyzer, self).__init__(cfg_ana, cfg_comp, looperName)
 
+        self.datafile_up   = TFile(self.cfg_ana.puFileDataUp)
+        self.datafile_down = TFile(self.cfg_ana.puFileDataDown)
+        
+        self.datahist_up = self.datafile_up.Get('pileup')
+        self.datahist_down = self.datafile_down.Get('pileup')
+
         self.doHists=True
         self.currentFile = None
 
@@ -58,7 +64,7 @@ class PileUpAnalyzer( Analyzer ):
         self.enable = True
         ## if component is embed return (has no trigger obj)
         if self.cfg_comp.isEmbed :
-          self.cfg_comp.puFileMC_UP   = None
+          self.cfg_comp.puFileMC   = None
           self.cfg_comp.puFileData = None
 
         self.setupInputs()
@@ -66,7 +72,7 @@ class PileUpAnalyzer( Analyzer ):
 
     def setupInputs(self, event=None):
         if self.cfg_comp.isMC or self.cfg_comp.isEmbed:
-            if not hasattr(self.cfg_comp,"puFileMC_UP") or (self.cfg_comp.puFileMC_UP is None and self.cfg_comp.puFileData is None):
+            if not hasattr(self.cfg_comp,"puFileMC") or (self.cfg_comp.puFileMC is None and self.cfg_comp.puFileData is None):
                 self.enable = False
             else:
                 assert( os.path.isfile(os.path.expandvars(self.cfg_comp.puFileData)) )
@@ -75,9 +81,9 @@ class PileUpAnalyzer( Analyzer ):
                 self.datahist.Scale( 1 / self.datahist.Integral() )
 
                 if not self.autoPU:
-                    assert( os.path.isfile(os.path.expandvars(self.cfg_comp.puFileMC_UP)) )
+                    assert( os.path.isfile(os.path.expandvars(self.cfg_comp.puFileMC)) )
 
-                    self.mcfile = TFile( self.cfg_comp.puFileMC_UP )
+                    self.mcfile = TFile( self.cfg_comp.puFileMC )
                     self.mchist = self.mcfile.Get('pileup')
                     if self.mchist == None: # and not is None!!
                         # trying the file structure of Artur. 
@@ -101,7 +107,7 @@ class PileUpAnalyzer( Analyzer ):
 
     def setupEventInputs(self, event=None):
         if self.cfg_comp.isMC or self.cfg_comp.isEmbed:
-            if not hasattr(self.cfg_comp,"puFileMC_UP") or (self.cfg_comp.puFileMC_UP is None and self.cfg_comp.puFileData is None):
+            if not hasattr(self.cfg_comp,"puFileMC") or (self.cfg_comp.puFileMC is None and self.cfg_comp.puFileData is None):
                 self.enable = False
             else:
                 self.datafile.cd()
@@ -129,6 +135,8 @@ class PileUpAnalyzer( Analyzer ):
     def beginLoop(self, setup):
         super(PileUpAnalyzer,self).beginLoop(setup)
         self.averages.add('puWeight', Average('puWeight') )
+        self.averages.add('puWeightUp', Average('puWeightUp') )
+        self.averages.add('puWeightDown', Average('puWeightDown') )
 
 
     def process(self, event):
@@ -141,6 +149,9 @@ class PileUpAnalyzer( Analyzer ):
           return True
 
         event.puWeight = 1
+        event.puWeightUp = 1
+        event.puWeightDown = 1
+
         event.nPU = None
         event.pileUpVertex_z = []
         event.pileUpVertex_ptHat = []
@@ -178,15 +189,25 @@ class PileUpAnalyzer( Analyzer ):
             if bin<1 or bin>self.datahist.GetNbinsX():
                 event.puWeight = 0
             else:
-                data = self.datahist.GetBinContent(bin)
-                mc = self.mchist.GetBinContent(bin)
+                data      = self.datahist.GetBinContent(bin)
+                mc        = self.mchist.GetBinContent(bin)
+
+                data_up   = self.datahist_up.GetBinContent(bin)
+                data_down = self.datahist_up.GetBinContent(bin)
                 #Protect 0 division!!!!
                 if mc !=0.0:
-                    event.puWeightSyst = data/mc
+                    event.puWeight     = data/mc
+                    event.puWeightUp   = data_up/mc
+                    event.puWeightDown = data_down/mc
                 else:
-                    event.puWeightSyst = 1
+                    event.puWeight = 1
+                    event.puWeightUp = 1
+                    event.puWeightDown = 1
         #import pdb; pdb.set_trace()
-        self.averages['puWeight'].add( event.puWeight )
+        event.eventWeight *= event.puWeight
+        self.averages['puWeight'].add( event.puWeight)
+        self.averages['puWeightUp'].add( event.puWeightUp)
+        self.averages['puWeightDown'].add( event.puWeightDown)
         return True
 
     def write(self, setup):

@@ -76,7 +76,9 @@ if year == '2016':
     puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/pileup.root'
     
 if year == '2017':
-    puFileData = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/pudistributions_data_2017.root'
+    puFileData = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pudistributions_data_2017.root'
+    puFileDataUp = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pudistributions_data_2017_up.root'
+    puFileDataDown = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pudistributions_data_2017_down.root'
     puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pileup.root'
 
 #else:
@@ -129,6 +131,7 @@ if test:
     cache = True
     if not data:
         comp = bindex.glob('MC_a_dilep')[0]
+               #MC_a_dilep
 			   #MC_c_TTW
     else:
         comp = selectedComponents[0]
@@ -467,7 +470,8 @@ bjets_30 = cfg.Analyzer(Selector,
 # Generator stuff 
 ############################################################################
 from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer import LHEWeightAnalyzer
-from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer   import PileUpAnalyzer
+#from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer   import PileUpAnalyzer
+from CMGTools.TTbarTime.heppy.analyzers.PileUpAnalyzer   import PileUpAnalyzer
 from CMGTools.TTbarTime.heppy.analyzers.MCWeighter      import MCWeighter
 from CMGTools.TTbarTime.proto.analyzers.NJetsAnalyzer   import NJetsAnalyzer
 from CMGTools.TTbarTime.heppy.analyzers.METAnalyzer     import METAnalyzer
@@ -487,7 +491,9 @@ lheweight = cfg.Analyzer(LHEWeightAnalyzer,
 pileup = cfg.Analyzer(PileUpAnalyzer,
                       name='PileUpAnalyzer',
                       true=True,
-                      autoPU=False)
+                      autoPU=False,
+                      puFileDataUp   = puFileDataUp,
+                      puFileDataDown = puFileDataDown)
 
 mcweighter = cfg.Analyzer(MCWeighter,
                           'MCWeighter')
