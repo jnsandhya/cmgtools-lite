@@ -387,7 +387,7 @@ def select_good_jets_FixEE2017(jet): #function use in the next Analyzer
            abs(jet.eta()) < 2.65 or\
            abs(jet.eta()) > 3.139
 
-if year == 2016:
+if year == '2016':
     jets = cfg.Analyzer(JetAnalyzer, 
                         output = 'jets',
                         jets = 'slimmedJets',
