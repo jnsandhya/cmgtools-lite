@@ -56,13 +56,38 @@ class BJetEfficiencyCreator(Analyzer):
       '''
       self.counters.counter('BJetEfficiencyCreator').inc('All Events')
       jets = getattr(event, self.cfg_ana.jets)
+
       for jet in jets:    
           self.counters.counter('BJetEfficiencyCreator').inc('total input jets')
-          jet.is_btagged = isBTagged(csv=jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
-                                       csv_cut=0.5803) #(loose wp csv2)
-#                                       csv_cut=0.1522) #(loose wp deepcsv)                                    
-    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
-          #print jet.hadronFlavour()
+
+          if self.cfg_ana.year == '2016': 
+              if self.cfg_ana.tagger == 'DeepCSV' :
+                  csv     = jet.btag("pfDeepCSVJetTags:probb + pfDeepCSVJetTags:probbb")
+                  csv_cut = 0.2217
+              if self.cfg_ana.tagger == 'DeepJet' :
+                  csv     = jet.btag("pfDeepFlavourJetTags:probb + pfDeepFlavourJetTags:probbb + pfDeepFlavourJetTags:problepb")
+                  csv_cut = 0.0614
+              if self.cfg_ana.tagger == 'CSVv2' :
+                  csv     = jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags")
+                  csv_cut = 0.5803 #assumption to keep it same as 2017, no SFs are actually provided for CSVv2 in 2016.
+          else: 
+              if self.cfg_ana.tagger == 'DeepCSV' :
+                  csv     = jet.btag("pfDeepCSVJetTags:probb + pfDeepCSVJetTags:probbb")
+                  csv_cut = 0.1522
+              if self.cfg_ana.tagger == 'DeepJet' :
+                  csv     = jet.btag("pfDeepFlavourJetTags:probb + pfDeepFlavourJetTags:probbb + pfDeepFlavourJetTags:problepb")
+                  csv_cut = 0.0521 #not sure if this will work on 2017 as the twiki says one needs to run recipe to obtain this on MiniAOD.
+              if self.cfg_ana.tagger == 'CSVv2' :
+                  csv     = jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags")
+                  csv_cut = 0.5803 
+              #csv_cut=0.1522) #(loose wp deepcsv)                                    
+              #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+              #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation2016Legacy
+              #print jet.hadronFlavour()
+              #print jet.hadronFlavour()
+
+          jet.is_btagged = isBTagged(csv, csv_cut) 
+          
           if abs(jet.hadronFlavour()) == 5:
               self.counters.counter('BJetEfficiencyCreator').inc('total b-jets')
               self.h2_b.Fill(jet.pt(), abs(jet.eta()))

@@ -90,3 +90,19 @@ to data/2016/muonSF/ and data/2016/muonSF/SystUnc/
 #https://twiki.cern.ch/twiki/bin/view/CMS/EgammaRunIIRecommendations
 
 > Update ElectronSFARC.py  to extract SF as event weights.
+
+8. JetAnalyzer was updated to run on jets without EE fix for 2016.	  
+
+9. For btag SFs: 
+    > First obtain the efficiencies for all MCs using the file : 
+     /home/cms/sjain/Aure/CMSSW_9_4_11_cand1/src/CMGTools/TTbarTime/cfgPython/weights/ScaleFactorB_config.py
+     
+     This was updated to : 
+     ScaleFactorBCleaned_config.py so that it runs on jets that are cleaned from electrons/muons and for the same selection jet pt > 30 GeV as in the analysis - which after checks is copied to 
+     ScaleFactorB_config.py.
+     The file BJetEfficiencyCreator was updated to get rid of the bugs. Also, BJetEfficiency creator was fixed to run on diffferent taggers with different values consistent between different years. 
+     > https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+     > https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation2016Legacy
+
+
+   
