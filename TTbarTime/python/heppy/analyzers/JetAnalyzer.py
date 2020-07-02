@@ -40,7 +40,7 @@ class JetAnalyzer(Analyzer):
         self.readCollections(event.input)
         jets = self.handles['jets'].product()
         output_jets = []
-        if self.cfg_ana.year == 2016 :
+        if self.cfg_ana.year == '2016' :
             for jet in jets:
                 hjet = Jet(jet)
                 output_jets.append(hjet)
