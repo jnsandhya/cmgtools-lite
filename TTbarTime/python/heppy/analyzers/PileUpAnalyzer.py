@@ -78,7 +78,12 @@ class PileUpAnalyzer( Analyzer ):
                 assert( os.path.isfile(os.path.expandvars(self.cfg_comp.puFileData)) )
                 self.datafile = TFile( self.cfg_comp.puFileData )
                 self.datahist = self.datafile.Get('pileup')
+                self.datahist_up = self.datafile_up.Get('pileup')
+                self.datahist_down = self.datafile_down.Get('pileup')
+
                 self.datahist.Scale( 1 / self.datahist.Integral() )
+                self.datahist_up.Scale( 1 / self.datahist_up.Integral() )
+                self.datahist_down.Scale( 1 / self.datahist_down.Integral() )
 
                 if not self.autoPU:
                     assert( os.path.isfile(os.path.expandvars(self.cfg_comp.puFileMC)) )
@@ -135,8 +140,6 @@ class PileUpAnalyzer( Analyzer ):
     def beginLoop(self, setup):
         super(PileUpAnalyzer,self).beginLoop(setup)
         self.averages.add('puWeight', Average('puWeight') )
-        self.averages.add('puWeightUp', Average('puWeightUp') )
-        self.averages.add('puWeightDown', Average('puWeightDown') )
 
 
     def process(self, event):
@@ -188,12 +191,14 @@ class PileUpAnalyzer( Analyzer ):
             bin = self.datahist.FindBin(event.nPU)
             if bin<1 or bin>self.datahist.GetNbinsX():
                 event.puWeight = 0
+                event.puWeightUp = 0
+                event.puWeightDown = 0
             else:
                 data      = self.datahist.GetBinContent(bin)
                 mc        = self.mchist.GetBinContent(bin)
 
                 data_up   = self.datahist_up.GetBinContent(bin)
-                data_down = self.datahist_up.GetBinContent(bin)
+                data_down = self.datahist_down.GetBinContent(bin)
                 #Protect 0 division!!!!
                 if mc !=0.0:
                     event.puWeight     = data/mc
@@ -203,11 +208,13 @@ class PileUpAnalyzer( Analyzer ):
                     event.puWeight = 1
                     event.puWeightUp = 1
                     event.puWeightDown = 1
+        print "-->"+str(self.datahist.GetBinContent(bin))
+        print "-->"+str(self.datahist_up.GetBinContent(bin))
+        print "-->"+str(self.datahist_down.GetBinContent(bin))
+        print "*********"
         #import pdb; pdb.set_trace()
         event.eventWeight *= event.puWeight
         self.averages['puWeight'].add( event.puWeight)
-        self.averages['puWeightUp'].add( event.puWeightUp)
-        self.averages['puWeightDown'].add( event.puWeightDown)
         return True
 
     def write(self, setup):
