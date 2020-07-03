@@ -62,20 +62,20 @@ class BJetEfficiencyCreator(Analyzer):
 
           if self.cfg_ana.year == '2016': 
               if self.cfg_ana.tagger == 'DeepCSV' :
-                  csv     = jet.btag("pfDeepCSVJetTags:probb + pfDeepCSVJetTags:probbb")
+                  csv     = jet.btag("pfDeepCSVJetTags:probb") + jet.btag("pfDeepCSVJetTags:probbb")
                   csv_cut = 0.2217
               if self.cfg_ana.tagger == 'DeepJet' :
-                  csv     = jet.btag("pfDeepFlavourJetTags:probb + pfDeepFlavourJetTags:probbb + pfDeepFlavourJetTags:problepb")
+                  csv     = jet.btag("pfDeepFlavourJetTags:probb") +  jet.btag("pfDeepFlavourJetTags:probbb") +  jet.btag("pfDeepFlavourJetTags:problepb")
                   csv_cut = 0.0614
               if self.cfg_ana.tagger == 'CSVv2' :
                   csv     = jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags")
                   csv_cut = 0.5803 #assumption to keep it same as 2017, no SFs are actually provided for CSVv2 in 2016.
           else: 
               if self.cfg_ana.tagger == 'DeepCSV' :
-                  csv     = jet.btag("pfDeepCSVJetTags:probb + pfDeepCSVJetTags:probbb")
+                  csv     = jet.btag("pfDeepCSVJetTags:probb") + jet.btag("pfDeepCSVJetTags:probbb")
                   csv_cut = 0.1522
               if self.cfg_ana.tagger == 'DeepJet' :
-                  csv     = jet.btag("pfDeepFlavourJetTags:probb + pfDeepFlavourJetTags:probbb + pfDeepFlavourJetTags:problepb")
+                  csv     = jet.btag("pfDeepFlavourJetTags:probb") + jet.btag("pfDeepFlavourJetTags:probbb") + jet.btag("pfDeepFlavourJetTags:problepb")
                   csv_cut = 0.0521 #not sure if this will work on 2017 as the twiki says one needs to run recipe to obtain this on MiniAOD.
               if self.cfg_ana.tagger == 'CSVv2' :
                   csv     = jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags")
