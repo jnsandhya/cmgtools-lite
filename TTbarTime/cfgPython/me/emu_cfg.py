@@ -38,10 +38,10 @@ logging.basicConfig(level=logging.WARNING)
 test       = getHeppyOption('test', False)
 syncntuple = getHeppyOption('syncntuple', True)
 data       = getHeppyOption('data', False)
-year       = getHeppyOption('year', '2017' )
+year       = getHeppyOption('year', '2016' )
 tes_string = getHeppyOption('tes_string', '') # '_tesup' '_tesdown'
 reapplyJEC = getHeppyOption('reapplyJEC', True)
-
+btagger    = getHeppyOption('btagger', 'DeepCSV')
 
 ############################################################################
 # Components
@@ -73,6 +73,8 @@ if year == '2017':
 # PileUp
 if year == '2016':    
     puFileData = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/MyDataPileupHistogram.root'
+    puFileDataUp = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/MyDataPileupHistogram_up.root'
+    puFileDataDown = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/MyDataPileupHistogram_down.root'
     puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/pileup.root'
     
 if year == '2017':
@@ -452,7 +454,9 @@ from CMGTools.TTbarTime.heppy.analyzers.EventFilter     import EventFilter
 
 btagger = cfg.Analyzer(BJetAnalyzerARC, 
                        'btagger', 
-                       jets = 'jets_30')
+                       jets = 'jets_30', 
+                       year = year, 
+                       tagger = btagger)
 
 one_bjets = cfg.Analyzer(EventFilter, 
                          name = 'OneBJets',

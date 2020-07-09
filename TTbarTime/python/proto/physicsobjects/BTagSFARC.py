@@ -9,22 +9,45 @@ ROOT.gSystem.Load('libCondToolsBTau')
 class BTagSFARC(object):
     '''Translate heppy run 1 BTagSF class to python, and update to 2012.
     '''
-    def __init__ (self, seed, wp='loose', measurement='central') :
+    def __init__ (self, seed, wp='loose', year= '2017',tagger = 'DeepCSV', measurement='central') :
         self.randm = TRandom3(seed)
 
-        rootfname = '/'.join([os.environ["CMSSW_BASE"],
-                              'src/CMGTools/TTbarTime/data/btag_efficiency_CSVv2.root'])
-#tagging_efficiencies_march2018_btageff-all_samp-inc-DeepCSV_medium.root
+        if year == '2016' :
+            if tagger == 'DeepCSV':
+                rootfname = '/'.join([os.environ["CMSSW_BASE"],
+                                      'src/CMGTools/TTbarTime/data/2016/btag/btag_efficiency_DeepCSV.root'])
+                calib = ROOT.BTagCalibration("CSVv2", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/btag/DeepCSV_2016LegacySF_V1.csv"))
+            if tagger == 'DeepJet':
+                rootfname = '/'.join([os.environ["CMSSW_BASE"],
+                              'src/CMGTools/TTbarTime/data/2016/btag/btag_efficiency_CSVv2.root'])
+                calib = ROOT.BTagCalibration("CSVv2", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/btag/DeepJet_2016LegacySF_V1.csv"))
+            if tagger == 'CSVv2':
+                rootfname = '/'.join([os.environ["CMSSW_BASE"],
+                              'src/CMGTools/TTbarTime/data/2016/btag/btag_efficiency_CSVv2.root'])
+                calib = ROOT.BTagCalibration("CSVv2", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/CSVv2_94XSF_V2_B_F.csv"))
+
+        else:
+            if tagger == 'DeepCSV':
+                rootfname = '/'.join([os.environ["CMSSW_BASE"],
+                                      'src/CMGTools/TTbarTime/data/btag_efficiency_CSVv2.root'])
+                calib = ROOT.BTagCalibration("DeepCSV", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/DeepCSV_94XSF_V5_B_F.csv"))
+            if tagger == 'DeepJet':
+                rootfname = '/'.join([os.environ["CMSSW_BASE"],
+                                      'src/CMGTools/TTbarTime/data/btag_efficiency_CSVv2.root'])
+                calib = ROOT.BTagCalibration("DeepFlavour", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/DeepFlavour_94XSF_V4_B_F.csv"))
+            if tagger == 'CSVv2':
+                rootfname = '/'.join([os.environ["CMSSW_BASE"],
+                                      'src/CMGTools/TTbarTime/data/btag_efficiency_CSVv2.root'])
+                calib = ROOT.BTagCalibration("CSVv2", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/CSVv2_94XSF_V2_B_F.csv"))
+            #tagging_efficiencies_march2018_btageff-all_samp-inc-DeepCSV_medium.root
+
         self.mc_eff_file = TFile(rootfname)
 
         # MC b-tag efficiencies as measured in HTT by Adinda
-        self.btag_eff_b = self.mc_eff_file.Get('btag_eff_b')
-        self.btag_eff_c = self.mc_eff_file.Get('btag_eff_c')
-        self.btag_eff_oth = self.mc_eff_file.Get('btag_eff_oth')
+        self.btag_eff_b = self.mc_eff_file.Get('btag_b')
+        self.btag_eff_c = self.mc_eff_file.Get('btag_c')
+        self.btag_eff_oth = self.mc_eff_file.Get('btag_oth')
 
-        # b-tag SFs from POG
-        calib = ROOT.BTagCalibration("CSVv2", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/CSVv2_94XSF_V2_B_F.csv"))
-        
         op_dict = {
             'loose':0,
             'medium':1,
