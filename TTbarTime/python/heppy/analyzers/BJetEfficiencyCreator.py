@@ -30,13 +30,13 @@ class BJetEfficiencyCreator(Analyzer):
         self.h2_c = TH2F("h2_c","h2_c",19,20,1000,4,0,2.4)
         self.h2_oth = TH2F("h2_oth","h2_oth",19,20,1000,4,0,2.4)
 
-        #self.btag_b = TH2F("btag_b","btag_b",19,20,1000,4,0,2.4)
-        #self.btag_c = TH2F("btag_c","btag_c",19,20,1000,4,0,2.4)
-        #self.btag_oth = TH2F("btag_oth","btag_oth",19,20,1000,4,0,2.4)
+        self.btag_b = TH2F("btag_b","btag_b",19,20,1000,4,0,2.4)
+        self.btag_c = TH2F("btag_c","btag_c",19,20,1000,4,0,2.4)
+        self.btag_oth = TH2F("btag_oth","btag_oth",19,20,1000,4,0,2.4)
         
-        self.btag_eff_b = TH2F("btag_eff_b","btag_eff_b",19,20,1000,4,0,2.4)
-        self.btag_eff_c = TH2F("btag_eff_c","btag_eff_c",19,20,1000,4,0,2.4)
-        self.btag_eff_oth = TH2F("btag_eff_oth","btag_eff_oth",19,20,1000,4,0,2.4)
+        #self.btag_eff_b = TH2F("btag_eff_b","btag_eff_b",19,20,1000,4,0,2.4)
+        #self.btag_eff_c = TH2F("btag_eff_c","btag_eff_c",19,20,1000,4,0,2.4)
+        #self.btag_eff_oth = TH2F("btag_eff_oth","btag_eff_oth",19,20,1000,4,0,2.4)
 
     def beginLoop(self, setup):
         super(BJetEfficiencyCreator, self).beginLoop(setup)
@@ -93,40 +93,40 @@ class BJetEfficiencyCreator(Analyzer):
               self.h2_b.Fill(jet.pt(), abs(jet.eta()))
               if jet.is_btagged:
                   self.counters.counter('BJetEfficiencyCreator').inc('total b-tagged jets')
-                  #self.btag_b.Fill(jet.pt(), abs(jet.eta()))
-                  self.btag_eff_b.Fill(jet.pt(), abs(jet.eta()))
+                  self.btag_b.Fill(jet.pt(), abs(jet.eta()))
+                  #self.btag_eff_b.Fill(jet.pt(), abs(jet.eta()))
           elif abs(jet.hadronFlavour()) == 4:
               self.h2_c.Fill(jet.pt(), abs(jet.eta()))
               if jet.is_btagged:
-                  #self.btag_c.Fill(jet.pt(), abs(jet.eta()))
-                  self.btag_eff_c.Fill(jet.pt(), abs(jet.eta()))
+                  self.btag_c.Fill(jet.pt(), abs(jet.eta()))
+                  #self.btag_eff_c.Fill(jet.pt(), abs(jet.eta()))
           elif jet.hadronFlavour() == 0:
               self.h2_oth.Fill(jet.pt(), abs(jet.eta()))
               if jet.is_btagged:
-                  #self.btag_oth.Fill(jet.pt(), abs(jet.eta()))
-                  self.btag_eff_oth.Fill(jet.pt(), abs(jet.eta()))
+                  self.btag_oth.Fill(jet.pt(), abs(jet.eta()))
+                  #self.btag_eff_oth.Fill(jet.pt(), abs(jet.eta()))
 
       
 
     def write(self, setup):
-        self.btag_eff_b.Divide(self.h2_b)
-        self.btag_eff_c.Divide(self.h2_c)
-        self.btag_eff_oth.Divide(self.h2_oth)
+        #self.btag_eff_b.Divide(self.h2_b)
+        #self.btag_eff_c.Divide(self.h2_c)
+        #self.btag_eff_oth.Divide(self.h2_oth)
         super(BJetEfficiencyCreator, self).write(setup)
 
         self.rootfile = TFile('/'.join([self.dirName,
                                             'btag.root']), 'recreate')
 
         #import pdb; pdb.set_trace()
-        #self.h2_b.Write()
-        #self.h2_c.Write()
-        #self.h2_oth.Write()
-        #self.btag_b.Write()
-        #self.btag_c.Write()        
-        #self.btag_oth.Write()
-        self.btag_eff_b.Write()
-        self.btag_eff_c.Write()        
-        self.btag_eff_oth.Write()
+        self.h2_b.Write()
+        self.h2_c.Write()
+        self.h2_oth.Write()
+        self.btag_b.Write()
+        self.btag_c.Write()        
+        self.btag_oth.Write()
+        #self.btag_eff_b.Write()
+        #self.btag_eff_c.Write()        
+        #self.btag_eff_oth.Write()
         self.rootfile.Write()
         self.rootfile.Close()
 

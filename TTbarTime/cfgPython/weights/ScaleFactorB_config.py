@@ -9,8 +9,8 @@ year = getHeppyOption('year', '2016' )
 btagger = getHeppyOption('btagger', 'DeepCSV' )
 
 from CMGTools.RootTools.samples.ComponentCreator import ComponentCreator
-#ComponentCreator.useLyonAAA = True
-ComponentCreator.useAAA = True
+ComponentCreator.useLyonAAA = True
+#ComponentCreator.useAAA = True
 
 ################################################################################
 # Analyzers 
