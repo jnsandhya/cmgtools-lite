@@ -37,11 +37,11 @@ logging.basicConfig(level=logging.WARNING)
 # production = True run on batch, production = False run locally
 test       = getHeppyOption('test', False)
 syncntuple = getHeppyOption('syncntuple', True)
-data       = getHeppyOption('data', False)
-year       = getHeppyOption('year', '2017' )
+data       = getHeppyOption('data', True)
+year       = getHeppyOption('year', '2016' )
 tes_string = getHeppyOption('tes_string', '') # '_tesup' '_tesdown'
 reapplyJEC = getHeppyOption('reapplyJEC', True)
-
+btagger    = getHeppyOption('btagger', 'DeepCSV')
 
 ############################################################################
 # Components
@@ -73,6 +73,8 @@ if year == '2017':
 # PileUp
 if year == '2016':    
     puFileData = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/MyDataPileupHistogram.root'
+    puFileDataUp = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/MyDataPileupHistogram_up.root'
+    puFileDataDown = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/MyDataPileupHistogram_down.root'
     puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/pileup.root'
     
 if year == '2017':
@@ -158,9 +160,9 @@ skim = cfg.Analyzer(SkimAnalyzerCount,
 
 trigger = cfg.Analyzer(TriggerAnalyzer,
                        name='TriggerAnalyzer',
-                       addTriggerObjects=True,
-                       requireTrigger=False,
-                       usePrescaled=False)
+                       addTriggerObjects=False,
+                       requireTrigger=True,
+                       usePrescaled=True)
 
 vertex = cfg.Analyzer(VertexAnalyzer,
                       name='VertexAnalyzer',
@@ -452,7 +454,9 @@ from CMGTools.TTbarTime.heppy.analyzers.EventFilter     import EventFilter
 
 btagger = cfg.Analyzer(BJetAnalyzerARC, 
                        'btagger', 
-                       jets = 'jets_30')
+                       jets = 'jets_30', 
+                       year = year, 
+                       tagger = btagger)
 
 one_bjets = cfg.Analyzer(EventFilter, 
                          name = 'OneBJets',
@@ -508,7 +512,10 @@ njets_ana = cfg.Analyzer(NJetsAnalyzer,
 # Ntuples 
 ############################################################################
 from CMGTools.TTbarTime.heppy.analyzers.NtupleProducer import NtupleProducer
-from CMGTools.TTbarTime.heppy.ntuple.NtupleCreator     import common as event_content_test
+if year == '2016':
+    from CMGTools.TTbarTime.heppy.ntuple.NtupleCreator import common2016 as event_content_test
+if year == '2017':
+    from CMGTools.TTbarTime.heppy.ntuple.NtupleCreator import common2017 as event_content_test
 
 ntuple = cfg.Analyzer(NtupleProducer,
                       name = 'NtupleProducer',

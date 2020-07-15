@@ -75,8 +75,10 @@ syst = Block(
 #    syst_mm_trig = v(lambda x : getattr(x, 'systMTrigWeight', 0.)),
 )  
 
-triggers_fired = Block(
-    'triggers_fired', lambda x: getattr(x, 'trigger_infos', []),
+#triggers_fired = Block()
+
+triggers2017 = Block(
+    'triggers2017', lambda x: getattr(x, 'trigger_infos', []),
     # electron
     trg_electron_ele32doubleEG_fired       = v(lambda x : any('Ele32_WPTight_Gsf_L1DoubleEG_v' in trg.name for trg in x if trg.fired)),
     trg_electron_ele35_fired               = v(lambda x : any('Ele35_WPTight_Gsf_v' in trg.name for trg in x if trg.fired)),
@@ -96,6 +98,36 @@ triggers_fired = Block(
     trg_muon_electron_mu8ele23DZ_fired     = v(lambda x : any('Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v' in trg.name for trg in x if trg.fired)),
     trg_muon_electron_mu12ele23DZ_fired    = v(lambda x : any('Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v' in trg.name for trg in x if trg.fired)),
     trg_muon_electron_mu23ele12DZ_fired    = v(lambda x : any('Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v' in trg.name for trg in x if trg.fired))
+)
+
+
+triggers2016 = Block(
+    'triggers2016', lambda x: getattr(x, 'trigger_infos', []),
+    # electron
+    trg_electron_ele27_fired            = v(lambda x : any('HLT_Ele27_WPTight_Gsf_v' in trg.name for trg in x if trg.fired)),
+    trg_electron_ele25eta21_fired       = v(lambda x : any('HLT_Ele25_eta2p1_WPTight_Gsf_v' in trg.name for trg in x if trg.fired)),
+    trg_electron_ele32eta21_fired       = v(lambda x : any('HLT_Ele32_eta2p1_WPTight_Gsf_v' in trg.name for trg in x if trg.fired)),
+
+    # double electron
+    trg_double_electron_ele23ele12DZ_fired = v(lambda x : any('HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v' in trg.name for trg in x if trg.fired)), 
+    trg_double_electron_ele24ele22eta21_fired   = v(lambda x : any('HLT_DoubleEle24_22_eta2p1_WPLoose_Gsf_v' in trg.name for trg in x if trg.fired)),    
+    # muon 
+    trg_muon_mu22eta21_fired               = v(lambda x : any('HLT_IsoMu22_eta2p1_v' in trg.name for trg in x if trg.fired)), 
+    trg_muon_mutk22eta21_fired             = v(lambda x : any('HLT_IsoTkMu22_eta2p1_v' in trg.name for trg in x if trg.fired)), 
+    trg_muon_mu24_fired                    = v(lambda x : any('HLT_IsoMu24_v' in trg.name for trg in x if trg.fired)),    
+    trg_muon_mutk24_fired                  = v(lambda x : any('HLT_IsoTkMu24_v' in trg.name for trg in x if trg.fired)),    
+    # double muon
+    trg_double_muon_mu17_fired             = v(lambda x : any('HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v' in trg.name for trg in x if trg.fired)),
+    trg_double_muon_mutk17_fired           = v(lambda x : any('HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v' in trg.name for trg in x if trg.fired)),
+    # electron - muon
+    trg_muon_electron_mu23ele12_fired      = v(lambda x : any('Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v' in trg.name for trg in x if trg.fired)),
+    trg_muon_electron_mu23ele12DZ_fired    = v(lambda x : any('Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v' in trg.name for trg in x if trg.fired)),
+    trg_muon_electron_mu12ele23_fired      = v(lambda x : any('Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v' in trg.name for trg in x if trg.fired)),
+    trg_muon_electron_mu12ele23DZ_fired    = v(lambda x : any('Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v' in trg.name for trg in x if trg.fired)),
+    trg_muon_electron_mu8ele23_fired       = v(lambda x : any('Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v' in trg.name for trg in x if trg.fired)),
+    trg_muon_electron_mu8ele23DZ_fired     = v(lambda x : any('Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v' in trg.name for trg in x if trg.fired))
+
+
 )
 
 bjets = Block(
@@ -139,8 +171,12 @@ dilepton = Block(
 )
 
 
-common = EventContent(
-    [event, weights, syst, jets30, bjets, electron, muon, dilepton, metvars, triggers_fired]
+common2016 = EventContent(
+    [event, weights, syst, jets30, bjets, electron, muon, dilepton, metvars, triggers2016]
+)
+
+common2017 = EventContent(
+    [event, weights, syst, jets30, bjets, electron, muon, dilepton, metvars, triggers2017]
 )
 
 ################################################################################

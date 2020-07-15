@@ -5,11 +5,12 @@ from PhysicsTools.HeppyCore.framework.config import printComps
 
 test = getHeppyOption('test', False)
 year = getHeppyOption('year', '2016' )
+#btagger = getHeppyOption('btagger', 'CSVv2' )
 btagger = getHeppyOption('btagger', 'DeepCSV' )
 
 from CMGTools.RootTools.samples.ComponentCreator import ComponentCreator
-#ComponentCreator.useLyonAAA = True
-ComponentCreator.useAAA = True
+ComponentCreator.useLyonAAA = True
+#ComponentCreator.useAAA = True
 
 ################################################################################
 # Analyzers 
@@ -127,26 +128,6 @@ select_electron = cfg.Analyzer(Selector,
                                filter_func = select_electron_function)
 
 ############################################################################
-# Dilepton 
-############################################################################
-from CMGTools.TTbarTime.heppy.analyzers.DiLeptonAnalyzer  import DiLeptonAnalyzer
-dilepton = cfg.Analyzer(DiLeptonAnalyzer,
-                        output = 'dileptons',
-                        l1 = 'select_muon',
-                        l2 = 'select_electron',
-                        dr_min = 0.5) #unspecified
-
-from CMGTools.H2TauTau.heppy.analyzers.Sorter import Sorter
-#completely useless with 1 dilepton but in case of ..
-dilepton_sorted = cfg.Analyzer(
-    Sorter,
-    output = 'dileptons_sorted',
-    src = 'dileptons',
-    metric = lambda x : x.pt(),
-    reverse = False
-    )
-
-############################################################################
 # Jets 
 ############################################################################
 
@@ -229,7 +210,6 @@ sequence = cfg.Sequence([
     select_muon,
     electrons, 
     select_electron,
-    dilepton,
     jets,
     jets_20_unclean,
     jet_20_electron_clean,

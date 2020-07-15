@@ -17,6 +17,7 @@ options,args = parser.parse_args()
 
 print options
 
+
 if options.year == '2016':
     from CMGTools.TTbarTime.proto.samples.summer16.ttbar2016 import mc_ttbar
 else: 

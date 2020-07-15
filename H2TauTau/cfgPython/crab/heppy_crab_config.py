@@ -25,6 +25,8 @@ config.JobType.outputFiles = []
 config.section_("Data")
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'EventBased'
+#config.Data.splitting = 'Automatic'
+
 username = os.environ["USER"]
 if username == 'torterotot':
     username = 'ltortero'
