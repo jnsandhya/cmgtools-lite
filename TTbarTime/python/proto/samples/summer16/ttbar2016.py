@@ -78,7 +78,6 @@ background_MC_WJets2 = creator.makeMCComponent("MC_m_WJets2", "/WJetsToLNu_TuneC
 background_MC_DY_50 = creator.makeMCComponent("MC_n_DY_50", "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext2-v1/MINIAODSIM", "CMS", ".*root", 5670)
 background_MC_DY_1050 = creator.makeMCComponent("MC_o_DY_1050", "/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM", "CMS", ".*root", 18590)
 background_MC_DY_10502 = creator.makeMCComponent("MC_o_DY_10502", "/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v3/MINIAODSIM", "CMS", ".*root", 18590)
-background_MC_DY_10503 = creator.makeMCComponent("MC_o_DY_10503", "/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext1-v2/MINIAODSIM", "CMS", ".*root", 18590)
 ###########################
 
 #####################################################################################
@@ -110,7 +109,6 @@ mc_ttbar = [
     #background_MC_DY_502,
     background_MC_DY_1050,
     background_MC_DY_10502,
-    background_MC_DY_10503
 ]
 
 mc_ttbar_test = [

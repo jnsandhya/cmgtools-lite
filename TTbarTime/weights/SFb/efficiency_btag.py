@@ -24,7 +24,7 @@ print options
 #print(algo)
 
 samples=[]
-samples=os.listdir("../../scripts/"+options.prod_label)
+#samples=os.listdir("../../scripts/"+options.prod_label)
 
 dir_input  = "files/"+options.year+"/"+options.algo+"/"
 if options.get_files:
@@ -34,11 +34,14 @@ if options.get_files:
          '''
         print "here am I creating input directory" 
         os.makedirs(dir_input)
-    #samples=os.listdir("../../scripts/"+options.prod_label)
+    samples=os.listdir("../../scripts/"+options.prod_label)
     os.chdir(dir_input)
     for i in samples:
         os.system("cp -r ../../../../../scripts/"+options.prod_label+"/"+i+" . ") 
     os.chdir("../../")
+
+samples = []
+samples = os.listdir(dir_input)
 
 dir_output = options.year+"/"+options.algo+"/"
 if not os.path.exists(dir_output):
@@ -80,4 +83,5 @@ eff_oth.Write()
 #rootfile[0].Get("btag_eff_c").Write("test")
 newfile.Close()
 
+os.system("cp "+dir_output+"btag_efficiency_"+options.algo+".root ../../data/"+options.year+"/btag/") 
 print ("fini !")

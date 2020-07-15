@@ -37,7 +37,7 @@ logging.basicConfig(level=logging.WARNING)
 # production = True run on batch, production = False run locally
 test       = getHeppyOption('test', False)
 syncntuple = getHeppyOption('syncntuple', True)
-data       = getHeppyOption('data', False)
+data       = getHeppyOption('data', True)
 year       = getHeppyOption('year', '2016' )
 tes_string = getHeppyOption('tes_string', '') # '_tesup' '_tesdown'
 reapplyJEC = getHeppyOption('reapplyJEC', True)
@@ -160,9 +160,9 @@ skim = cfg.Analyzer(SkimAnalyzerCount,
 
 trigger = cfg.Analyzer(TriggerAnalyzer,
                        name='TriggerAnalyzer',
-                       addTriggerObjects=True,
-                       requireTrigger=False,
-                       usePrescaled=False)
+                       addTriggerObjects=False,
+                       requireTrigger=True,
+                       usePrescaled=True)
 
 vertex = cfg.Analyzer(VertexAnalyzer,
                       name='VertexAnalyzer',
@@ -512,7 +512,10 @@ njets_ana = cfg.Analyzer(NJetsAnalyzer,
 # Ntuples 
 ############################################################################
 from CMGTools.TTbarTime.heppy.analyzers.NtupleProducer import NtupleProducer
-from CMGTools.TTbarTime.heppy.ntuple.NtupleCreator     import common as event_content_test
+if year == '2016':
+    from CMGTools.TTbarTime.heppy.ntuple.NtupleCreator import common2016 as event_content_test
+if year == '2017':
+    from CMGTools.TTbarTime.heppy.ntuple.NtupleCreator import common2017 as event_content_test
 
 ntuple = cfg.Analyzer(NtupleProducer,
                       name = 'NtupleProducer',
