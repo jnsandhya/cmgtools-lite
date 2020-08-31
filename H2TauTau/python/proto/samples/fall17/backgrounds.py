@@ -8,7 +8,7 @@ DY1JetsToLL_M50_LO     = kreator.makeMCComponent("DY1JetsToLL_M50_LO",     "/DY1
 DY1JetsToLL_M50_LO_ext = kreator.makeMCComponent("DY1JetsToLL_M50_LO_ext",     "/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_v3_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM",      "CMS", ".*root", 877.8)
 DY2JetsToLL_M50_LO     = kreator.makeMCComponent("DY2JetsToLL_M50_LO",     "/DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM",      "CMS", ".*root", 304.4)
 DY2JetsToLL_M50_LO_ext = kreator.makeMCComponent("DY2JetsToLL_M50_LO_ext",     "/DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM",      "CMS", ".*root", 307)
-DY3JetsToLL_M50_LO     = kreator.makeMCComponent("DY3JetsToLL_M50_LO",     "/DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM",      "CMS", ".*root", 111.5)
+DY3JetsToLL_M50_LO     = kreator.makeMCComponent("DY3JetsToLL_M50_LO",     "/DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM",      "CMS", ".*root", 111.5)
 DY3JetsToLL_M50_LO_ext = kreator.makeMCComponent("DY3JetsToLL_M50_LO_ext",     "/DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM",      "CMS", ".*root", 111.5)
 DY4JetsToLL_M50_LO     = kreator.makeMCComponent("DY4JetsToLL_M50_LO",     "/DY4JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_v2_94X_mc2017_realistic_v14-v2/MINIAODSIM",      "CMS", ".*root", 44.03)
 
@@ -180,3 +180,20 @@ backgrounds = [DY1JetsToLL_M50_LO,
                ZZTo2L2Nu,
                ZZTo2L2Q
                ]
+
+DY = [DY1JetsToLL_M50_LO,
+      DY1JetsToLL_M50_LO_ext,
+      DY2JetsToLL_M50_LO,
+      DY2JetsToLL_M50_LO_ext,
+      DY3JetsToLL_M50_LO,
+      DY3JetsToLL_M50_LO_ext,
+      DY4JetsToLL_M50_LO,
+      DYJetsToLL_M50,
+      DYJetsToLL_M50_ext,
+      DYJetsToLL_M10to50_LO]
+
+TTbar = [TTLep_pow,
+         TTHad_pow,
+         TTSemi_pow]
+
+generic_backgrounds = [comp for comp in backgrounds if comp not in DY+TTbar]

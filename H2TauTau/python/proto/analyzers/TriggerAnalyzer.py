@@ -6,11 +6,14 @@ from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
 import PhysicsTools.HeppyCore.framework.config as cfg
 
 class TriggerFilterMatch(object):
-    def __init__(self, leg1_names, leg2_names, match_both_legs=True, triggers=None):
+    def __init__(self, trigtype, leg1_names, leg2_names, match_both_legs=True, triggers=None):
+        self.trigtype = trigtype
         self.leg1_names = leg1_names
         self.leg2_names = leg2_names
         # If true, requires both legs to be matched (if there are names)
         self.match_both_legs = match_both_legs
+        if self.match_both_legs and (len(self.leg1_names)==0 or len(self.leg2_names)==0):
+            raise Exception("You require to match both legs but do not provide paths for both of them.")
         # If set, will only attach this to passed trigger names; other,
         # TriggerAnalyzer will figure it out
         self.triggers = [] if triggers is None else triggers
@@ -196,8 +199,17 @@ class TriggerAnalyzer(Analyzer):
                                 info.match_infos.add(match_info)
             # import pdb;pdb.set_trace()
             for info in trigger_infos:
+                
+                for match_info in info.match_infos:
+                    info.trigtype = match_info.trigtype
+                    if info.fired:
+                        if match_info.leg1_names and not info.leg1_objs:
+                            print 'Warning in TriggerAnalyzer, matching info associated but no leg1 objects set', info.name, match_info
+                        if match_info.leg2_names and not info.leg2_objs:
+                            print 'Warning in TriggerAnalyzer, matching info associated but no leg2 objects set', info.name, match_info
+
                 if not info.fired: 
-                    break
+                    continue
 
                 if len(info.match_infos) == 0:
                     print 'Warning in TriggerAnalyzer, did not find trigger matching information for trigger path', info.name
@@ -207,16 +219,9 @@ class TriggerAnalyzer(Analyzer):
                     for match_info in info.match_infos: 
                         print match_info
 
-                for match_info in info.match_infos:
-                    if info.fired:
-                        if match_info.leg1_names and not info.leg1_objs:
-                            print 'Warning in TriggerAnalyzer, matching info associated but no leg1 objects set', info.name, match_info
-                        if match_info.leg2_names and not info.leg2_objs:
-                            print 'Warning in TriggerAnalyzer, matching info associated but no leg2 objects set', info.name, match_info
 
                                                 
         event.trigger_infos = trigger_infos
-
         if self.cfg_ana.verbose:
             print 'run %d, lumi %d,event %d' %(event.run, event.lumi, event.eventId) , 'Triggers_fired: ', triggers_fired  
         if hasattr(self.cfg_ana, 'saveFlag'):

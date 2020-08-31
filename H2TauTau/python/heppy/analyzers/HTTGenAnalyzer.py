@@ -1,6 +1,7 @@
 import math
 import os
 import ROOT
+from ROOT import TFile
 
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
@@ -10,19 +11,18 @@ from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
 from PhysicsTools.Heppy.physicsobjects.GenParticle import GenParticle
 from PhysicsTools.Heppy.physicsutils.TauDecayModes import tauDecayModes
 
-from CMGTools.H2TauTau.proto.analyzers.TauGenTreeProducer import TauGenTreeProducer
-
-
-# if "/sDYReweighting_cc.so" not in ROOT.gSystem.GetLibraries(): 
-#     ROOT.gROOT.ProcessLine(".L %s/src/CMGTools/H2TauTau/python/proto/plotter/DYReweighting.cc+" % os.environ['CMSSW_BASE']);
-ROOT.gSystem.Load("libCMGToolsH2TauTau")
-from ROOT import getDYWeight
-    
+from CMGTools.H2TauTau.proto.analyzers.TauGenTreeProducer import TauGenTreeProducer    
 
 class HTTGenAnalyzer(Analyzer):
 
     '''Add generator information to hard leptons.
     '''
+
+    def __init__(self, cfg_ana, cfg_comp, looperName):
+        super(HTTGenAnalyzer, self).__init__(cfg_ana, cfg_comp, looperName)
+        self.wsfile = TFile(self.cfg_ana.workspace_path)
+        self.ws = self.wsfile.Get('w')
+
     def declareHandles(self):
         super(HTTGenAnalyzer, self).declareHandles()
 
@@ -77,13 +77,44 @@ class HTTGenAnalyzer(Analyzer):
         event.genmet_py = genmet.py()
         event.genmet_phi = genmet.phi()
 
-        if self.cfg_comp.name.find('TT') != -1 or self.cfg_comp.name.find('TTH') == -1:
-            self.getTopPtWeight(event)
+        if self.cfg_comp.name.find('TT') != -1 and self.cfg_comp.name.find('Higgs') == -1:
+            if not hasattr(self.cfg_ana, 'top_systematic'):
+                self.applyTopPtWeight(event)
+            else:
+                self.applyTopPtWeight(event, up_or_down = self.cfg_ana.top_systematic)
 
         if self.cfg_comp.name.find('DY') != -1:
-            self.getDYMassPtWeight(event)
+            if not hasattr(self.cfg_ana, 'DY_systematic'):
+                self.applyDYMassPtWeight(event)
+            else:
+                self.applyDYMassPtWeight(event, up_or_down = self.cfg_ana.DY_systematic)
 
         return True
+
+    def applyDYMassPtWeight(self, event, up_or_down = None):
+        '''
+        DY pT re-weighting
+        Uncertainty of 10% of the correction on the
+        re-weighting applied to Z to ll events in all channels.
+        '''
+        if not hasattr(event, 'parentBoson'):
+            event.parentBoson = HTTGenAnalyzer.getParentBoson(event)
+        self.ws.var('z_gen_mass').setVal(event.parentBoson.mass())
+        self.ws.var('z_gen_pt').setVal(event.parentBoson.pt())
+        dy_weight = self.ws.function('zptmass_weight_nom').getVal()
+        
+        shift = dy_weight - 1
+        if up_or_down == 'up' :
+            factor = 1.1
+        elif up_or_down == 'down' :
+            factor = 0.9
+        else :
+            factor = 1.0
+        dy_weight = 1 + shift * factor
+
+        event.dy_weight = dy_weight
+        event.eventWeight *= dy_weight
+
 
     @staticmethod
     def getGenTauJets(event):
@@ -108,7 +139,12 @@ class HTTGenAnalyzer(Analyzer):
                 event.genTauJetConstituents.append(c_genjet)
 
     @staticmethod
-    def getTopPtWeight(event):
+    def applyTopPtWeight(event, up_or_down = None):
+        '''
+        Top pT re-weighting
+        Uncertainty between no and twice the correction on the
+        re-weighting applied to tt events in all channels.
+        '''
         ttbar = [p for p in event.genParticles if abs(p.pdgId()) == 6 and p.statusFlags().isLastCopy() and p.statusFlags().fromHardProcess()]
 
         if len(ttbar) == 2:
@@ -124,6 +160,16 @@ class HTTGenAnalyzer(Analyzer):
 
             event.top1_pt = top_1_pt
             event.top2_pt = top_2_pt
+
+            shift = topweight - 1
+            if up_or_down == 'up' :
+                factor = 2.
+            elif up_or_down == 'down' :
+                factor = 0.
+            else :
+                factor = 1.
+            topweight = 1 + shift * factor
+
             event.topweight = topweight
             event.eventWeight *= topweight
 
@@ -146,12 +192,6 @@ class HTTGenAnalyzer(Analyzer):
         taus_prompt = [p for p in event.genParticles if p.statusFlags().isDirectHardProcessTauDecayProduct()]
         all = leptons_prompt + taus_prompt
         return HTTGenAnalyzer.p4sum(all)
-
-    @staticmethod 
-    def getDYMassPtWeight(event):
-        if not hasattr(event, 'parentBoson'):
-            event.parentBoson = HTTGenAnalyzer.getParentBoson(event)
-        event.dy_weight = getDYWeight(event.parentBoson.mass(), event.parentBoson.pt())
 
     @staticmethod
     def getSusySystem(event):

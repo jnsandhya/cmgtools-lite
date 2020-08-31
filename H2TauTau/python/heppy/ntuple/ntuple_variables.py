@@ -83,6 +83,24 @@ for vname, variable in jets20.iteritems():
 jets30 = Block(
     'jets30', lambda x: x.jets_30,
     n_jets_pt30 = v(lambda x: len(x), int),
+    j1_pt_pt30 = v(lambda x: x[0].pt() if len(x)>0 else default),
+    j1_eta_pt30 = v(lambda x: x[0].eta() if len(x)>0 else default),
+    j1_phi_pt30 = v(lambda x: x[0].phi() if len(x)>0 else default),
+    # j1_bcsv = v(lambda x: x.bcsv()),
+    j1_pumva_pt30 = v(lambda x: x[0].puMva('pileupJetId:fullDiscriminant') if len(x)>0 else default),
+#    j1_puid = v(lambda x: x[0].pileUpJetId_htt() if len(x)>0 else default),
+    j1_flavour_parton_pt30 = v(lambda x: x[0].partonFlavour() if len(x)>0 else default),
+    j1_flavour_hadron_pt30 = v(lambda x: x[0].hadronFlavour() if len(x)>0 else default),
+    j1_rawf_pt30 = v(lambda x: x[0].rawFactor() if len(x)>0 else default),
+    j2_pt_pt30 = v(lambda x: x[1].pt() if len(x)>1 else default),
+    j2_eta_pt30 = v(lambda x: x[1].eta() if len(x)>1 else default),
+    j2_phi_pt30 = v(lambda x: x[1].phi() if len(x)>1 else default),
+    j2_pumva_pt30 = v(lambda x: x[1].puMva('pileupJetId:fullDiscriminant') if len(x)>1 else default ),
+#    j2_puid = v(lambda x: x[1].pileUpJetId_htt() if len(x)>1 else default ),
+    j2_flavour_parton_pt30 = v(lambda x: x[1].partonFlavour() if len(x)>1 else default),
+    j2_flavour_hadron_pt30 = v(lambda x: x[1].hadronFlavour() if len(x)>1 else default),
+    j2_rawf_pt30 = v(lambda x: x[1].rawFactor() if len(x)>1 else default),
+    dijet_m_pt30 = v(lambda x: (x[0].p4()+x[1].p4()).M() if len(x)>1 else default),
 )
 
 
@@ -172,8 +190,9 @@ lepton_vars = dict(
     phi = v(lambda x: x.phi()),
     m = v(lambda x: x.mass()),
     q = v(lambda x: x.charge()),
-    weight_idso = v(lambda x: getattr(x, 'weight_idiso', 1.)),
-    weight_trig = v(lambda x: getattr(x, 'weight_trigger', 1.)),
+    weight_id = v(lambda x: getattr(x, 'weight_id', 1.)),
+    weight_iso = v(lambda x: getattr(x, 'weight_iso', 1.)),
+    weight_idiso = v(lambda x: getattr(x, 'weight_idiso', 1.)),
     gen_match = v(lambda x: getattr(x, 'gen_match', 0), int),
 )
 
@@ -194,10 +213,12 @@ metvars = Block(
 
 electron_vars = dict(
     id_e_mva_nt_loose = v(lambda x: x.physObj.userFloat("ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values")), 
-    weight_tracking = v(lambda x: getattr(x, 'weight_tracking', 1. )),
+    weight_tracking = v(lambda x: getattr(x, 'weight_trk', 1. )),
     iso = v(lambda x: x.iso_htt()),
     d0 = v(lambda x: x.dxy()),
     dz = v(lambda x: x.dz()),
+    weight_trig_e = v(lambda x: getattr(x, 'weight_trigger_e', 1.)),
+    weight_trig_et = v(lambda x: getattr(x, 'weight_trigger_et', 1.)),
 )
 
 muon_vars = dict(
@@ -205,6 +226,8 @@ muon_vars = dict(
     iso = v(lambda x: x.iso_htt()), 
     d0 = v(lambda x: x.dxy()),
     dz = v(lambda x: x.dz()),  
+    weight_trig_m = v(lambda x: getattr(x, 'weight_trigger_m', 1.)),
+    weight_trig_mt = v(lambda x: getattr(x, 'weight_trigger_mt', 1.)),
 )
 
 tau_ids = [
@@ -257,6 +280,10 @@ tau_vars = dict(
     weight_fakefactor_nobtag = v(lambda x : getattr(x, 'weight_fakefactor_nobtag', 1.)),
     weight_fakefactor_nobtag_up = v(lambda x : getattr(x, 'weight_fakefactor_nobtag_up', 1.)),
     weight_fakefactor_nobtag_down = v(lambda x : getattr(x, 'weight_fakefactor_nobtag_down', 1.)),
+    weight_trig_t = v(lambda x: getattr(x, 'weight_trigger_t', 1.)),
+    weight_trig_tt = v(lambda x: getattr(x, 'weight_trigger_tt', 1.)),
+    weight_trig_et = v(lambda x: getattr(x, 'weight_trigger_et', 1.)),
+    weight_trig_mt = v(lambda x: getattr(x, 'weight_trigger_mt', 1.)),
 )
 
 # necessary, or all lambdas will be the same! 

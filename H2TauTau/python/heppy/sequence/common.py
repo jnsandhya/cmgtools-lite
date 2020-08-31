@@ -1,8 +1,64 @@
 import PhysicsTools.HeppyCore.framework.config as cfg
-
+import os
 import ROOT 
 
-# import all analysers:
+#########################
+### pu files & global tags
+#########################
+
+puFileMC = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/pudistributions_mc_2017_artur_13Nov.root'
+puFileMC_bbhamcatnlo = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/pudistributions_mc_2017_artur_Jul9_update_bbhamcatnlo.root'
+puFileData = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/pudistributions_data_2017.root'
+
+gt_mc = 'Fall17_17Nov2017_V32_MC'
+gt_data = 'Fall17_17Nov2017{}_V32_DATA'
+gt_embed = 'Fall17_17Nov2017{}_V32_DATA'
+
+#########################
+### samples #############
+#########################
+
+from CMGTools.H2TauTau.proto.samples.fall17.backgrounds import DY, TTbar, generic_backgrounds
+from CMGTools.H2TauTau.proto.samples.fall17.data import data_tau, data_single_muon, data_single_electron
+from CMGTools.H2TauTau.proto.samples.fall17.higgs import mc_higgs
+from CMGTools.H2TauTau.proto.samples.fall17.higgs_susy import mssm_signals, mc_higgs_susy_bb_amcatnlo
+from CMGTools.H2TauTau.proto.samples.fall17.embedded import embedded_tt, embedded_mt, embedded_et
+
+for sample in embedded_tt+embedded_mt+embedded_et:
+    sample.isEmbed = True
+
+for sample in DY+TTbar+generic_backgrounds+mc_higgs+mssm_signals:
+    sample.puFileData = puFileData
+    sample.puFileMC = puFileMC
+
+for sample in mc_higgs_susy_bb_amcatnlo:
+    sample.puFileData = puFileData
+    sample.puFileMC = puFileMC_bbhamcatnlo
+
+for sample in data_tau+data_single_muon+data_single_electron+embedded_tt+embedded_mt+embedded_et:
+    era = sample.name[sample.name.find('2017')+4]
+    if 'V32' in gt_data and era in ['D','E']:
+        era = 'DE'
+    sample.dataGT = gt_data.format(era)
+
+
+samples_lists = {'DY': DY,
+                 'TTbar': TTbar,
+                 'generic_background': generic_backgrounds,
+                 'data_tau': data_tau,
+                 'data_single_muon': data_single_muon,
+                 'data_single_electron': data_single_electron,
+                 'embedded_tt': embedded_tt,
+                 'embedded_mt': embedded_mt,
+                 'embedded_et': embedded_et,
+                 'sm_higgs': mc_higgs,
+                 'mssm_signals': mssm_signals,
+                 'mc_higgs_susy_bb_amcatnlo': mc_higgs_susy_bb_amcatnlo}
+
+#########################
+### analyzers ###########
+#########################
+
 # Heppy analyzers
 from PhysicsTools.Heppy.analyzers.core.JSONAnalyzer import JSONAnalyzer
 from PhysicsTools.Heppy.analyzers.core.SkimAnalyzerCount import SkimAnalyzerCount
@@ -15,11 +71,6 @@ from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer import TriggerAnalyzer
 from CMGTools.H2TauTau.heppy.analyzers.Cleaner import Cleaner
 from CMGTools.H2TauTau.heppy.analyzers.Selector import Selector
 from CMGTools.H2TauTau.heppy.analyzers.EventFilter import EventFilter
-
-
-
-puFileMC = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/pudistributions_mc_2017_artur_13Nov.root'
-puFileData = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/pudistributions_data_2017.root'
 
 
 json = cfg.Analyzer(
@@ -92,17 +143,6 @@ from PhysicsTools.Heppy.physicsutils.EffectiveAreas import areas
 
 Electron.EffectiveArea03 = areas['Fall17']['electron']
 
-# Electron.EffectiveArea03 = { 
-#     '03' : 
-#     [ (1.000, 0.1440),
-#       (1.479, 0.1562),
-#       (2.000, 0.1032),
-#       (2.200, 0.0859),
-#       (2.300, 0.1116),
-#       (2.400, 0.1321),
-#       (2.500, 0.1654) ],
-#     'eta' : lambda x: x.superCluster().eta()
-#     }
 Electron.iso_htt = lambda x: x.relIso(0.3, "EA", 
                                       all_charged=False)
 
@@ -130,6 +170,7 @@ tauenergyscale = cfg.Analyzer(
     TauP4Scaler,
     'tauenergyscale',
     src = 'taus',
+    systematics = True
 )
 
 # third lepton veto =========================================================                  
@@ -219,12 +260,9 @@ trigger_match = cfg.Analyzer(
 
 # Jet sequence ===========================================================
 
-gt_mc = 'Fall17_17Nov2017_V8_MC'#latest : V32
-gt_data = 'Fall17_17Nov2017{}_V6_DATA'#latest: V32
-gt_embed = 'Fall17_17Nov2017{}_V6_DATA'
 
 def select_good_jets_FixEE2017(jet):
-    return jet.correctedJet("Uncorrected").pt() > 50. or \
+        return jet.correctedJet("Uncorrected").pt() >50. or \
         abs(jet.eta()) < 2.65 or \
         abs(jet.eta()) > 3.139
 
@@ -238,11 +276,20 @@ jets = cfg.Analyzer(
     selection = select_good_jets_FixEE2017
 )
 
+from CMGTools.H2TauTau.heppy.analyzers.Sorter import Sorter
+jet_sorter = cfg.Analyzer(
+    Sorter,
+    output = 'jets_sorted',
+    src = 'jets',
+    metric = lambda jet: (jet.pt()),
+    reverse = True
+    )
+
 jets_20_unclean = cfg.Analyzer(
     Selector,
     'jets_20_unclean',
     output = 'jets_20_unclean',
-    src = 'jets',
+    src = 'jets_sorted',
     filter_func = lambda x : x.pt()>20 and abs(x.eta())<4.7 and x.jetID("POG_PFID_Tight")
 )
 
@@ -268,9 +315,17 @@ jets_30 = cfg.Analyzer(
 
 from CMGTools.H2TauTau.heppy.analyzers.BJetAnalyzer import BJetAnalyzer
 btagger = cfg.Analyzer(
-    BJetAnalyzer, 
-    'btagger', 
-    jets = 'jets_20'
+    BJetAnalyzer,
+    'btagger',
+    jets = 'jets_20',
+    tagger_name = 'DeepCSV',
+    discriminator = 'pfDeepCSVDiscriminatorsJetTags:BvsAll',
+    wp = 'medium',
+    csv_cut = 0.4941,
+    SF_file = os.path.expandvars("$CMSSW_BASE/src/CMGTools/H2TauTau/data/DeepCSV_94XSF_V3_B_F.csv"),
+    method = 'promote_demote',
+    efficiency_file = os.path.expandvars('$CMSSW_BASE/src/CMGTools/H2TauTau/data/tagging_efficiencies_march2018.root'),
+    sys = 'central'
 )
 
 #always put after btagger
@@ -285,6 +340,7 @@ bjets_20 = cfg.Analyzer(
 
 sequence_jets = cfg.Sequence([
         jets,
+        jet_sorter,
         jets_20_unclean,
         jet_20,
         jets_30,
@@ -357,7 +413,7 @@ from CMGTools.H2TauTau.proto.analyzers.NJetsAnalyzer import NJetsAnalyzer
 njets_ana = cfg.Analyzer(
     NJetsAnalyzer,
     name='NJetsAnalyzer',
-    fillTree=True,
+    fillTree=False,
     verbose=False
 )
 
@@ -367,10 +423,13 @@ httgenana = cfg.Analyzer(
     'httgenana',
     jetCol='slimmedJets',
     genmatching=True,
-    genPtCut=8.
+    genPtCut=8.,
+    workspace_path='$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_2017_v2.root'
 )
 
-# Definition of the main sequences =======================================
+#########################
+### sequences ###########
+#########################
 
 sequence_beforedil = cfg.Sequence([
         mcweighter,
@@ -397,6 +456,5 @@ sequence_afterdil = cfg.Sequence([
 
 sequence_afterdil.extend(sequence_jets)
 sequence_afterdil.append(pfmetana)
-# sequence_afterdil.append(mvametana)
 sequence_afterdil.extend(sequence_third_lepton_veto)
 sequence_afterdil.append(debugger)
