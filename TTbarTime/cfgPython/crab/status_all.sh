@@ -2,6 +2,8 @@
 # This is little script to get number of jobs succeeded
 #
 
+rm status/*
+
 cmd=$(find $PWD/ -type d -iname \*$1\*)
 
 echo ""

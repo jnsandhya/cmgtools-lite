@@ -38,7 +38,7 @@ if options.get_files:
     os.chdir(dir_input)
     for i in samples:
         os.system("cp -r ../../../../../scripts/"+options.prod_label+"/"+i+" . ") 
-    os.chdir("../../")
+    os.chdir("../../../")
 
 samples = []
 samples = os.listdir(dir_input)

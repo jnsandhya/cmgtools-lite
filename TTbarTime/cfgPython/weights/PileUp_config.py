@@ -4,7 +4,7 @@ from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
 from PhysicsTools.HeppyCore.framework.config import printComps
 
 test       = getHeppyOption('test', False)
-year       = getHeppyOption('year', '2016' )
+year       = getHeppyOption('year', '2017' )
 
 from CMGTools.RootTools.samples.ComponentCreator import ComponentCreator
 ComponentCreator.useAAA = True
@@ -16,8 +16,9 @@ ComponentCreator.useAAA = True
 
 if (year == '2016'):
     from CMGTools.TTbarTime.proto.samples.summer16.ttbar2016 import mc_ttbar
-else:
-    from CMGTools.TTbarTime.proto.samples.fall17.ttbar2017 import mc_ttbar
+elif(year == '2017'):
+    #from CMGTools.TTbarTime.proto.samples.fall17.ttbar2017 import mc_ttbar
+    from CMGTools.TTbarTime.proto.samples.fall17.ttbar2017_update import mc_ttbar
 
 events_to_pick = []
 
@@ -29,8 +30,10 @@ selectedComponents = mc_ttbar
 ############################################################################
 if(year == '2016'):    
     import CMGTools.TTbarTime.proto.samples.summer16.ttbar2016 as backgrounds_forindex
-if(year == '2017'):
-    import CMGTools.TTbarTime.proto.samples.fall17.ttbar2017 as backgrounds_forindex    
+elif(year == '2017'):
+    #import CMGTools.TTbarTime.proto.samples.fall17.ttbar2017 as backgrounds_forindex    
+    import CMGTools.TTbarTime.proto.samples.fall17.ttbar2017_update as backgrounds_forindex    
+
 from CMGTools.TTbarTime.proto.samples.component_index import ComponentIndex
 bindex = ComponentIndex(backgrounds_forindex)
 

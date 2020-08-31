@@ -21,7 +21,7 @@ print options
 if options.year == '2016':
     from CMGTools.TTbarTime.proto.samples.summer16.ttbar2016 import mc_ttbar
 else: 
-    from CMGTools.TTbarTime.proto.samples.fall17.ttbar2017 import mc_ttbar
+    from CMGTools.TTbarTime.proto.samples.fall17.ttbar2017_update import mc_ttbar
 
 
 samples=[]

@@ -37,8 +37,8 @@ logging.basicConfig(level=logging.WARNING)
 # production = True run on batch, production = False run locally
 test       = getHeppyOption('test', False)
 syncntuple = getHeppyOption('syncntuple', True)
-data       = getHeppyOption('data', True)
-year       = getHeppyOption('year', '2016' )
+data       = getHeppyOption('data', False)
+year       = getHeppyOption('year', '2017' )
 tes_string = getHeppyOption('tes_string', '') # '_tesup' '_tesdown'
 reapplyJEC = getHeppyOption('reapplyJEC', True)
 btagger    = getHeppyOption('btagger', 'DeepCSV')
@@ -52,7 +52,7 @@ if year == '2016':
     from CMGTools.TTbarTime.proto.samples.summer16.trigger   import data_triggers
     from CMGTools.TTbarTime.proto.samples.summer16.trigger   import mc_triggers
 if year == '2017':
-    from CMGTools.TTbarTime.proto.samples.fall17.ttbar2017 import mc_ttbar
+    from CMGTools.TTbarTime.proto.samples.fall17.ttbar2017_update import mc_ttbar
     from CMGTools.TTbarTime.proto.samples.fall17.ttbar2017 import data_elecmuon
     from CMGTools.TTbarTime.proto.samples.fall17.trigger   import data_triggers
     from CMGTools.TTbarTime.proto.samples.fall17.trigger   import mc_triggers
@@ -81,7 +81,7 @@ if year == '2017':
     puFileData = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pudistributions_data_2017.root'
     puFileDataUp = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pudistributions_data_2017_up.root'
     puFileDataDown = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pudistributions_data_2017_down.root'
-    puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pileup.root'
+    puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2017/pileup.root'
 
 #else:
 for sample in mc_ttbar:
@@ -125,16 +125,16 @@ elif data:
 if year == '2016':    
     import CMGTools.TTbarTime.proto.samples.summer16.ttbar2016 as backgrounds_forindex
 if year == '2017':
-    import CMGTools.TTbarTime.proto.samples.fall17.ttbar2017 as backgrounds_forindex    
+    import CMGTools.TTbarTime.proto.samples.fall17.ttbar2017_update as backgrounds_forindex    
 from CMGTools.TTbarTime.proto.samples.component_index import ComponentIndex
 bindex = ComponentIndex(backgrounds_forindex)
 
 if test:
     cache = True
     if not data:
-        comp = bindex.glob('MC_a_dilep')[0]
+        comp = bindex.glob('MC_c_hadronic')[0]
                #MC_a_dilep
-			   #MC_c_TTW
+			   #MC_c_hadronic
     else:
         comp = selectedComponents[0]
     selectedComponents   = [comp]
