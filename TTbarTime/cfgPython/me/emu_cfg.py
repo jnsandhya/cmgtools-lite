@@ -91,7 +91,6 @@ for sample in mc_ttbar:
         #print sample
 
 #print data_triggers 
-
 for sample in data_elecmuon:
     #print sample
     #sample.name[sample.name.find('2017')+4] are era A,B,C,D,E and F
@@ -101,18 +100,14 @@ for sample in data_elecmuon:
     if year == '2017':
         if 'V32' in gt_data and era in ['D','E']:
             era = 'DE'
-            sample.dataGT = gt_data.format(era)
-        #print sample.dataGT
-    else:
+    elif year == '2016':
         if 'V11' in gt_data and era in ['B','C','D']:
             era = 'BCD'
-            sample.dataGT = gt_data.format(era)
         if 'V11' in gt_data and era in ['E','F']:
             era = 'EF'
-            sample.dataGT = gt_data.format(era)
         if 'V11' in gt_data and era in ['G','H']:
             era = 'GH'
-            sample.dataGT = gt_data.format(era)
+    sample.dataGT = gt_data.format(era)
 
 if not data:
     selectedComponents = mc_ttbar
@@ -132,11 +127,12 @@ bindex = ComponentIndex(backgrounds_forindex)
 if test:
     cache = True
     if not data:
-        comp = bindex.glob('MC_c_hadronic')[0]
+        comp = bindex.glob('MC_a_dilep')[0]
                #MC_a_dilep
 			   #MC_c_hadronic
     else:
-        comp = selectedComponents[0]
+        #comp = selectedComponents[0]
+        comp = bindex.glob('SingleElectron_Run2017E_31Mar2018')[0]
     selectedComponents   = [comp]
     comp.files           = [comp.files[0]]
     comp.splitFactor     = 1
