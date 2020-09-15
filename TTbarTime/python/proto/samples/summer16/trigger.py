@@ -5,6 +5,11 @@ from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer import TriggerFilterMatch
 ############################################################################
 
 mc_triggers = [
+    'HLT_Ele27_WPTight_Gsf_v*',
+    'HLT_IsoTkMu24_v*',
+    'HLT_IsoMu24_v*',
+    'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*',
+    'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*',
  ]
 
 
