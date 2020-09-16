@@ -208,10 +208,7 @@ class PileUpAnalyzer( Analyzer ):
                     event.puWeight = 1
                     event.puWeightUp = 1
                     event.puWeightDown = 1
-        print "-->"+str(self.datahist.GetBinContent(bin))
-        print "-->"+str(self.datahist_up.GetBinContent(bin))
-        print "-->"+str(self.datahist_down.GetBinContent(bin))
-        print "*********"
+
         #import pdb; pdb.set_trace()
         event.eventWeight *= event.puWeight
         self.averages['puWeight'].add( event.puWeight)

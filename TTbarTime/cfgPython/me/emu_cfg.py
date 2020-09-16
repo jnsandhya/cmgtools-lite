@@ -514,7 +514,7 @@ pileup = cfg.Analyzer(PileUpAnalyzer,
                       puFileDataDown = puFileDataDown)
 
 mcweighter = cfg.Analyzer(MCWeighter,
-                          'MCWeighter')
+                          name='MCWeighter')
 
 njets_ana = cfg.Analyzer(NJetsAnalyzer,
                          name='NJetsAnalyzer',
