@@ -471,11 +471,29 @@ bjets_30 = cfg.Analyzer(Selector,
 ############################################################################
 from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer import LHEWeightAnalyzer
 #from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer   import PileUpAnalyzer
-from CMGTools.TTbarTime.heppy.analyzers.PileUpAnalyzer   import PileUpAnalyzer
+from CMGTools.TTbarTime.heppy.analyzers.PileUpAnalyzer  import PileUpAnalyzer
+from CMGTools.TTbarTime.heppy.analyzers.GenAnalyzer     import GenAnalyzer
+from CMGTools.TTbarTime.heppy.analyzers.GenMatcherAnalyzer import GenMatcherAnalyzer
 from CMGTools.TTbarTime.heppy.analyzers.MCWeighter      import MCWeighter
 from CMGTools.TTbarTime.proto.analyzers.NJetsAnalyzer   import NJetsAnalyzer
 from CMGTools.TTbarTime.heppy.analyzers.METAnalyzer     import METAnalyzer
 #from CMGTools.TTbarTime.heppy.analyzers.GenAnalyzer import GenAnalyzer
+
+#"genmatcher = cfg.Analyzer(
+#    GenMatcherAnalyzer, 
+#    'genmatcher',
+#    jetCol='slimmedJets',
+#    genPtCut=8.,
+#    genmatching = True,
+#    filter_func = select_dilepton
+#)
+
+gen_particles = cfg.Analyzer(GenAnalyzer,
+                             name='GenAnalyzer',
+                             jetCol='slimmedJets',
+                             genmatching=True,
+                             genPtCut=8.
+                             )
 
 pfmetana = cfg.Analyzer(METAnalyzer,
                         name='PFMetana',
@@ -521,6 +539,8 @@ ntuple = cfg.Analyzer(NtupleProducer,
 
 sequence = cfg.Sequence([
     mcweighter,
+#    genmatcher,
+    gen_particles,
 # Analyzers
     json,
     vertex,

@@ -48,6 +48,7 @@ metvars = Block(
 weights = Block(
     'weights', lambda x: x, 
     weight = v(lambda x : x.eventWeight),
+    weight_top = v(lambda x : getattr(x, 'topWeight', 1.)),
     weight_pu = v(lambda x : getattr(x, 'puWeight', 1.)),
     weight_generator = v(lambda x : getattr(x, 'generatorWeight', 1.)),
     weight_pu_up = v(lambda x : getattr(x, 'puWeightUp',1.)),

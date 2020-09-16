@@ -32,6 +32,7 @@ class GenAnalyzer(Analyzer):
 
         self.handles['jets'] = AutoHandle(self.cfg_ana.jetCol, 'std::vector<pat::Jet>')
 
+     
     def beginLoop(self, setup):
         super(GenAnalyzer, self).beginLoop(setup)
         self.counters.addCounter('LHEWeights')
@@ -42,6 +43,7 @@ class GenAnalyzer(Analyzer):
 
 
     def process(self, event):
+            
         event.genmet_pt = -99.
         event.genmet_eta = -99.
         event.genmet_e = -99.
@@ -58,7 +60,7 @@ class GenAnalyzer(Analyzer):
                 self.count.inc('Sum LHEWeight {}'.format(n_lhe), event.LHE_weights[n_lhe].wgt)
 
         self.readCollections(event.input)
-
+        event.genParticles = self.mchandles['genParticles'].product()
         event.weight_gen = math.copysign(1., self.mchandles['genInfo'].product().weight())
         event.eventWeight *= math.copysign(1., event.weight_gen)
 
@@ -115,17 +117,17 @@ class GenAnalyzer(Analyzer):
             top_1_pt = ttbar[0].pt()
             top_2_pt = ttbar[1].pt()
 
-            if top_1_pt > 400:
-                top_1_pt = 400.
-            if top_2_pt > 400:
-                top_2_pt = 400.
+            if top_1_pt > 500:
+                top_1_pt = 500.
+            if top_2_pt > 500:
+                top_2_pt = 500.
 
-            topweight = math.sqrt(math.exp(0.156-0.00137*top_1_pt)*math.exp(0.156-0.00137*top_2_pt))
+            topweight = math.sqrt(math.exp(0.0615-0.0005*top_1_pt)*math.exp(0.0615-0.0005*top_2_pt))
 
             event.top1_pt = top_1_pt
             event.top2_pt = top_2_pt
-            event.topweight = topweight
-            event.eventWeight *= topweight
+            event.topWeight = topweight
+            #event.eventWeight *= topweight
 
     @staticmethod
     def p4sum(ps):
