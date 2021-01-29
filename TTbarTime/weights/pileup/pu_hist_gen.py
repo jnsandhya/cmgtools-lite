@@ -59,8 +59,9 @@ pu_hist = []
 
 for i in range(len(file_names)):
     pu_file.append(TFile(dir_input+file_names[i]+"/tree.root"))
+    print "got the sample:", dir_input+file_names[i] 
     pu_tree.append(pu_file[i].Get('events'))
-    #print "got tree of the sample:", file_names[i] 
+    print "got tree of the sample:", file_names[i] 
 
 
 #print len(file_names)
@@ -74,6 +75,7 @@ for i in range(len(file_names)):
     #print "projecting pu distribution of the sample:",i, file_names[i] 
     pu_hist.append(TH1D(name_list[i],"",200,0.,200.))
     pu_tree[i].Project(name_list[i], "pu")
+    print "got pu inf of  sample:", file_names[i] 
     pu_hist[i].Write()
 
 rootfile.Close()

@@ -11,28 +11,28 @@ class DilepTriggerSyst(Analyzer):
         self.year       = self.cfg_ana.year
         if self.year == '2016':
             
-            rootfname_ee = '/'.join([os.environ["CMSSW_BASE"],
-                                     'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_ee2016_pt.root'])                       
+            #rootfname_ee = '/'.join([os.environ["CMSSW_BASE"],
+            #                         'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_ee2016_pt.root'])                       
             rootfname_em = '/'.join([os.environ["CMSSW_BASE"],
-                                     'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_emu2016_pt.root'])
-            rootfname_mm = '/'.join([os.environ["CMSSW_BASE"],
-                                     'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_mumu2016_pt.root'])
+                                     'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_2016.root'])
+            #rootfname_mm = '/'.join([os.environ["CMSSW_BASE"],
+            #                         'src/CMGTools/TTbarTime/data/2016/dilepSF/TriggerSF_mumu2016_pt.root'])
             
         elif self.year == '2017':
-            rootfname_ee = '/'.join([os.environ["CMSSW_BASE"],
-                                     'src/CMGTools/TTbarTime/data/TriggerSF_ee2017_pt.root'])                       
+            #rootfname_ee = '/'.join([os.environ["CMSSW_BASE"],
+            #                         'src/CMGTools/TTbarTime/data/TriggerSF_ee2017_pt.root'])                       
             rootfname_em = '/'.join([os.environ["CMSSW_BASE"],
-                                     'src/CMGTools/TTbarTime/data/TriggerSF_emu2017_pt.root'])
-            rootfname_mm = '/'.join([os.environ["CMSSW_BASE"],
-                                     'src/CMGTools/TTbarTime/data/TriggerSF_mumu2017_pt.root'])
+                                     'src/CMGTools/TTbarTime/data/2017/dilepSF/TriggerSF_2017.root'])
+            #rootfname_mm = '/'.join([os.environ["CMSSW_BASE"],
+            #                         'src/CMGTools/TTbarTime/data/TriggerSF_mumu2017_pt.root'])
             
-        self.mc_syst_ee_trig_file = TFile(rootfname_ee)
+        #self.mc_syst_ee_trig_file = TFile(rootfname_ee)
         self.mc_syst_em_trig_file = TFile(rootfname_em)
-        self.mc_syst_mm_trig_file = TFile(rootfname_mm)
+        #self.mc_syst_mm_trig_file = TFile(rootfname_mm)
           
-        self.mc_syst_ee_trig_hist = self.mc_syst_ee_trig_file.Get('h_lep1Pt_lep2Pt_Step6')                              
-        self.mc_syst_em_trig_hist = self.mc_syst_em_trig_file.Get('h_lep1Pt_lep2Pt_Step3')                              
-        self.mc_syst_mm_trig_hist = self.mc_syst_mm_trig_file.Get('h_lep1Pt_lep2Pt_Step9')                              
+        self.mc_syst_ee_trig_hist = self.mc_syst_em_trig_file.Get('h2D_SF_ee_lepABpt_FullError')                              
+        self.mc_syst_em_trig_hist = self.mc_syst_em_trig_file.Get('h2D_SF_emu_lepABpt_FullError')                              
+        self.mc_syst_mm_trig_hist = self.mc_syst_em_trig_file.Get('h2D_SF_mumu_lepABpt_FullError')                              
 
                 
     def process(self, event):

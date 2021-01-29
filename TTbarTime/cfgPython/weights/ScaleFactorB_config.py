@@ -4,7 +4,7 @@ from PhysicsTools.HeppyCore.framework.config import printComps
 
 
 test = getHeppyOption('test', False)
-year = getHeppyOption('year', '2017' )
+year = getHeppyOption('year', '2016' )
 #btagger = getHeppyOption('btagger', 'CSVv2' )
 btagger = getHeppyOption('btagger', 'DeepCSV' )
 

@@ -16,8 +16,8 @@ Event.print_patterns = ['*taus*',
 #import pdb; pdb.set_trace()
 
 from CMGTools.RootTools.samples.ComponentCreator import ComponentCreator
-ComponentCreator.useAAA = True
-#ComponentCreator.useLyonAAA = True
+#ComponentCreator.useAAA = True
+ComponentCreator.useLyonAAA = True
 
 from CMGTools.H2TauTau.heppy.analyzers.Cleaner import Cleaner
 
@@ -78,9 +78,9 @@ if year == '2016':
     puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2016/pileup.root'
     
 if year == '2017':
-    puFileData = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pudistributions_data_2017.root'
-    puFileDataUp = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pudistributions_data_2017_up.root'
-    puFileDataDown = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/pudistributions_data_2017_down.root'
+    puFileData = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2017/pudistributions_data_2017.root'
+    puFileDataUp = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2017/pudistributions_data_2017_up.root'
+    puFileDataDown = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2017/pudistributions_data_2017_down.root'
     puFileMC   = '$CMSSW_BASE/src/CMGTools/TTbarTime/data/2017/pileup.root'
 
 #else:

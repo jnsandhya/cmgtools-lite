@@ -7,6 +7,7 @@ class BJetAnalyzerARC(Analyzer):
         super(BJetAnalyzerARC, self).__init__(cfg_ana, cfg_comp, looperName)
         self.btagSF = BTagSFARC(0, wp='loose', year = self.cfg_ana.year, tagger = self.cfg_ana.tagger)
 
+
     def process(self, event):
         '''Adds the is_btagged attribute to the jets of the
         given jets collection.
@@ -16,6 +17,8 @@ class BJetAnalyzerARC(Analyzer):
 
 
         sfb_weight = 1.
+        sfb_weightup = 1.
+        sfb_weightdown = 1.
         jets = getattr(event, self.cfg_ana.jets)
         for jet in jets:
             if self.cfg_ana.year == '2016': 
@@ -48,8 +51,12 @@ class BJetAnalyzerARC(Analyzer):
  
             if(jet.btagWeight > 0):
                 sfb_weight *= jet.btagWeight
+                sfb_weightup *= jet.btagWeightUp
+                sfb_weightdown *= jet.btagWeightDown
             
         setattr(event, 'sfbWeight', sfb_weight)
+        setattr(event, 'sfbWeightUp', sfb_weightup)
+        setattr(event, 'sfbWeightDown', sfb_weightdown)
         event.eventWeight *= event.sfbWeight
             
                                                    

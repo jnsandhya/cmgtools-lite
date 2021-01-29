@@ -38,6 +38,7 @@ if options.get_files:
     os.chdir(dir_input)
     for i in samples:
         os.system("cp -r ../../../../../scripts/"+options.prod_label+"/"+i+" . ") 
+        print i
     os.chdir("../../../")
 
 samples = []
@@ -60,7 +61,8 @@ eff_c    = TH2F("btag_c","btag_eff_c",19,20,1000,4,0,2.4)
 eff_oth  = TH2F("btag_oth","btag_eff_oth",19,20,1000,4,0,2.4)
 
 for i in range (len(samples)):
-    rootfile.append(TFile(dir_input+"/"+samples[i]+"/"+btag_file))
+    rootfile.append(TFile(dir_input+"/"+samples[i]+"/0000/"+samples[i]+"/BJetEfficiencyCreator/"+btag_file))
+    print samples[i]
     tot_b.Add(rootfile[i].Get("h2_b"))
     tot_c.Add(rootfile[i].Get("h2_c"))
     tot_oth.Add(rootfile[i].Get("h2_oth"))

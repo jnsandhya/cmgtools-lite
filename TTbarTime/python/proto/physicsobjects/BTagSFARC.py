@@ -29,16 +29,16 @@ class BTagSFARC(object):
         else:
             if tagger == 'DeepCSV':
                 rootfname = '/'.join([os.environ["CMSSW_BASE"],
-                                      'src/CMGTools/TTbarTime/data/btag_efficiency_CSVv2.root'])
-                calib = ROOT.BTagCalibration("DeepCSV", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/DeepCSV_94XSF_V5_B_F.csv"))
+                                      'src/CMGTools/TTbarTime/data/2017/btag/btag_efficiency_DeepCSV.root'])
+                calib = ROOT.BTagCalibration("DeepCSV", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/2017/btag/DeepCSV_94XSF_V5_B_F.csv"))
             if tagger == 'DeepJet':
                 rootfname = '/'.join([os.environ["CMSSW_BASE"],
-                                      'src/CMGTools/TTbarTime/data/btag_efficiency_CSVv2.root'])
-                calib = ROOT.BTagCalibration("DeepFlavour", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/DeepFlavour_94XSF_V4_B_F.csv"))
+                                      'src/CMGTools/TTbarTime/data/2017/btag/btag_efficiency_DeepCSV.root'])
+                calib = ROOT.BTagCalibration("DeepFlavour", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/2017/btag/DeepFlavour_94XSF_V4_B_F.csv"))
             if tagger == 'CSVv2':
                 rootfname = '/'.join([os.environ["CMSSW_BASE"],
-                                      'src/CMGTools/TTbarTime/data/btag_efficiency_CSVv2.root'])
-                calib = ROOT.BTagCalibration("CSVv2", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/CSVv2_94XSF_V2_B_F.csv"))
+                                      'src/CMGTools/TTbarTime/data/2017/btag/btag_efficiency_DeepCSV.root'])
+                calib = ROOT.BTagCalibration("CSVv2", os.path.expandvars("$CMSSW_BASE/src/CMGTools/TTbarTime/data/2017/btag/CSVv2_94XSF_V2_B_F.csv"))
             #tagging_efficiencies_march2018_btageff-all_samp-inc-DeepCSV_medium.root
 
         self.mc_eff_file = TFile(rootfname)
@@ -86,9 +86,9 @@ class BTagSFARC(object):
         eff = hist.GetBinContent(binx, biny)
         return eff
 
-    def getPOGSFB(self, pt, eta, flavor):
+    def getPOGSFB(self, pt, eta, flavor, measurement='central'):
         if flavor in [4, 5]:
-            return self.reader_bc.eval_auto_bounds('central', self.getBTVJetFlav(flavor), eta, pt)
+            return self.reader_bc.eval_auto_bounds(measurement, self.getBTVJetFlav(flavor), eta, pt)
 
         return self.reader_light.eval_auto_bounds('central', self.getBTVJetFlav(flavor), eta, pt)
 
@@ -97,19 +97,30 @@ class BTagSFARC(object):
         setattr(jet, 'btagWeight', 1.)
         
         SFb = self.getPOGSFB(pt, abs(eta), jetflavor)
+        SFb_up = self.getPOGSFB(pt, abs(eta), jetflavor,'up')
+        SFb_down = self.getPOGSFB(pt, abs(eta), jetflavor,'down')
+        #print SFb, SFb_up, SFb_down
         eff_b = self.getMCBTagEff(pt, abs(eta), jetflavor)
         
         if csv > csv_cut:
             if(eff_b != 0):
                 jet.btagWeight = (SFb*eff_b)/eff_b
+                jet.btagWeightUp = (SFb_up*eff_b)/eff_b
+                jet.btagWeightDown = (SFb_down*eff_b)/eff_b
             else:
                 jet.btagWeight = 1
+                jet.btagWeightUp = 1
+                jet.btagWeightDown = 1
             return True
         else:
             if(eff_b != 1):
                 jet.btagWeight = (1 - SFb*eff_b)/(1 - eff_b)
+                jet.btagWeightUp = (1 - SFb_up*eff_b)/(1 - eff_b)
+                jet.btagWeightDown = (1 - SFb_down*eff_b)/(1 - eff_b)
             else:
                 jet.btagWeight = 1
+                jet.btagWeightUp = 1
+                jet.btagWeightDown = 1
             return False
     
 
